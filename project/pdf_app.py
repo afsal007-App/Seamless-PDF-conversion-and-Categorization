@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 # ==== Bank Modules ====
@@ -17,85 +16,20 @@ bank_modules = {
     "🧾 WIO Bank": Wio_bank
 }
 
-# ==== CSS Styling ====
-st.markdown("""
-    <style>
-    .title {
-        font-size: 3rem;
-        font-weight: 900;
-        text-align: center;
-        padding-top: 1rem;
-        background: linear-gradient(90deg, #00dbde, #fc00ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: glow 2s ease-in-out infinite alternate;
-    }
-    .subtext {
-        text-align: center;
-        font-size: 1.05rem;
-        color: #aaa;
-        margin-top: -10px;
-        margin-bottom: 30px;
-    }
-    
-    .dropdown-label {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #cdb4d4;
-        margin-bottom: 12px;
-    }
-    hr {
-        border: none;
-        border-top: 1px solid rgba(255,255,255,0.1);
-        margin: 40px 0;
-    }
-    @keyframes glow {
-        from {
-            text-shadow: 0 0 05px ##886dc7, 0 0 10px ##cdb4d4;
-        }
-        to {
-            text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99;
-        }
-    }
-    </style>
-""", unsafe_allow_html=True)
+def main():
+    # ==== Page Config ====
+    st.markdown("<h1 style='text-align:center;'>Bank Statement PDF Extractor</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>Convert your bank PDFs into clean, usable data 📄 ➡️ 📊</p>", unsafe_allow_html=True)
 
-# ==== Header ====
-st.markdown("<div class='title'>Bank Statement PDF Extractor</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data 📄 ➡️ 📊</div>", unsafe_allow_html=True)
+    # ==== Bank Selection ====
+    selected_bank = st.selectbox("Select Your Bank", list(bank_modules.keys()))
 
-# ==== Glass Dropdown Section ====
-st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-st.markdown('<div class="dropdown-label"> Select Your Bank</div>', unsafe_allow_html=True)
-selected_bank = st.selectbox("", list(bank_modules.keys()))
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ==== Divider ====
-st.markdown("<hr>", unsafe_allow_html=True)
-
-# ==== Launch Selected Bank Processor ====
-if selected_bank:
-    df = bank_modules[selected_bank].run()
-    if df is not None:
-        st.session_state["converted_data"] = df
-
-
-
-def run_app():
-    # Paste your entire existing code here inside this function
-    # Wrap it within proper indentation
-    import streamlit as st
-
-    # --- Your existing code starts here ---
-    ...
-    ...
+    # ==== Process ====
     if selected_bank:
         df = bank_modules[selected_bank].run()
         if df is not None:
             st.session_state["converted_data"] = df
 
-return df
-# --- End of function ---
-
+# Call it for direct runs
 if __name__ == "__main__":
-    run_app()
+    main()
