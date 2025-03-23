@@ -79,3 +79,22 @@ st.markdown("<hr>", unsafe_allow_html=True)
 # ==== Launch Selected Bank Processor ====
 if selected_bank:
     bank_modules[selected_bank].run()
+
+
+
+def run_app():
+    # Paste your entire existing code here inside this function
+    # Wrap it within proper indentation
+    import streamlit as st
+
+    # --- Your existing code starts here ---
+    ...
+    ...
+    if selected_bank:
+        df = bank_modules[selected_bank].run()
+        if df is not None:
+            st.session_state["converted_data"] = df
+# --- End of function ---
+
+if __name__ == "__main__":
+    run_app()
