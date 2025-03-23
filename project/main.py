@@ -1,29 +1,25 @@
 import streamlit as st
 import os
 
-st.set_page_config(page_title="Integrated Bank Tool", layout="centered")
-st.title("💼 Bank Statement Utility Suite")
+st.set_page_config(page_title="Bank Tool Suite", layout="centered")
+st.title("🏦 Bank PDF & Categorization Suite")
 
-# Sidebar Navigation
-choice = st.sidebar.radio("Select Module", ["PDF Converter", "Categorization"])
+# Sidebar navigation
+choice = st.sidebar.radio("Choose App", ["PDF Converter", "Categorization"])
 
-# Run the PDF Converter
+# PDF Converter App
 if choice == "PDF Converter":
-    st.markdown("### 🏦 Bank PDF Converter")
-    with st.spinner("Loading PDF converter..."):
-        exec(open("pdf_converter/App.py").read())
+    with st.spinner("Launching PDF Converter..."):
+        exec(open("pdf_app.py").read())
 
-    # Provide a button to navigate to Categorization
     if "converted_data" in st.session_state:
         if st.button("➡️ Proceed to Categorization"):
             st.session_state["next_app"] = "Categorization"
             st.experimental_rerun()
 
-# Run the Categorization App
+# Categorization App
 elif choice == "Categorization" or st.session_state.get("next_app") == "Categorization":
-    st.markdown("### 🧠 Categorization Tool")
-    with st.spinner("Loading Categorization tool..."):
-        exec(open("categorizer/App.py").read())
+    with st.spinner("Launching Categorizer..."):
+        exec(open("categorizer_app.py").read())
 
-    # Clear redirect trigger
     st.session_state["next_app"] = None
