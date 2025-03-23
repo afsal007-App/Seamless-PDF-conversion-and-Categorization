@@ -112,3 +112,4 @@ def run():
             # CSV download
             csv = df.to_csv(index=False).encode('utf-8')
             st.download_button("Download CSV", csv, "transactions.csv", "text/csv")
+return df
