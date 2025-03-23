@@ -210,3 +210,18 @@ if uploaded_files:
             )
 else:
     st.info("👆 Upload files to begin.")
+
+def run_app():
+    import streamlit as st
+    # --- Your existing Categorization code here ---
+    ...
+    ...
+    # Instead of file uploader, check if we have session_state data
+    if st.session_state.get("converted_data") is not None:
+        st.success("✅ Using data from PDF conversion")
+        statement_df = st.session_state["converted_data"]
+        # Proceed to categorization using statement_df directly
+
+if __name__ == "__main__":
+    run_app()
+
