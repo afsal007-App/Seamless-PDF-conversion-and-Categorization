@@ -5,10 +5,10 @@ import os
 st.set_page_config(page_title="Bank Tool Suite", layout="centered")
 st.title("🏦 Bank PDF & Categorization Suite")
 
-# Get the path of this file (main.py)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Dynamically get the current directory (very important)
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
-# Sidebar navigation
+# Sidebar option
 choice = st.sidebar.radio("Choose App", ["PDF Converter", "Categorization"])
 
 # PDF Converter App
