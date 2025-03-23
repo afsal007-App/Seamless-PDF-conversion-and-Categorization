@@ -134,3 +134,5 @@ def run():
             st.download_button("Download CSV", csv, "fab_transactions.csv", "text/csv")
         else:
             st.warning("⚠️ No valid transactions found.")
+
+return df
