@@ -96,3 +96,5 @@ def run():
 
             csv = df.to_csv(index=False).encode("utf-8")
             st.download_button("Download CSV", csv, "wio_bank_transactions.csv", "text/csv")
+
+return df
