@@ -17,9 +17,6 @@ bank_modules = {
     "🧾 WIO Bank": Wio_bank
 }
 
-# ==== Page Config ====
-st.set_page_config(page_title="Bank PDF Extractor", layout="centered")
-
 # ==== CSS Styling ====
 st.markdown("""
     <style>
