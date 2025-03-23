@@ -91,6 +91,8 @@ def run_app():
         df = bank_modules[selected_bank].run()
         if df is not None:
             st.session_state["converted_data"] = df
+
+return df
 # --- End of function ---
 
 if __name__ == "__main__":
