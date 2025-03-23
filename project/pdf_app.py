@@ -75,7 +75,9 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 # ==== Launch Selected Bank Processor ====
 if selected_bank:
-    bank_modules[selected_bank].run()
+    df = bank_modules[selected_bank].run()
+    if df is not None:
+        st.session_state["converted_data"] = df
 
 
 
