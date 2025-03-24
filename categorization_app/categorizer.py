@@ -11,7 +11,7 @@ MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl
 
 def run():
     # Custom CSS for styling the app
-     st.markdown("""
+      st.markdown("""
         <style>
         [data-testid="stToolbar"] { visibility: hidden !important; }
 
