@@ -85,7 +85,19 @@ def process_pdf(pdf_file, filename="uploaded_file.pdf"):
     return transactions
 
 def run():
-    st.markdown("<h4 style='font-size:8px;'>Bank PDF Processor</h4>", unsafe_allow_html=True)
+    st.markdown(
+    """
+    <style>
+    .custom-title {
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
+    )
     uploaded_files = st.file_uploader("Upload one or more PDF files", type="pdf", accept_multiple_files=True)
 
     all_transactions = []
