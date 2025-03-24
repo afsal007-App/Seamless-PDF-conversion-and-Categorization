@@ -35,6 +35,13 @@ def run():
             color: rgba(200, 200, 200, 0.7); pointer-events: none;
             animation: fadeIn 2s ease;
         }
+        div.stButton > button {
+            background-color: #444 !important;
+            color: white !important;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
         </style>
         <h1 class="center-title"> Categorization Bot</h1>
         <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
@@ -180,23 +187,9 @@ def run():
     elif not uploaded_files:
         st.info("👆 Upload files to begin.")
 
-    # ✅ Always-visible standalone Reset button
-    st.markdown("""
-    <div style="text-align: center; margin-top: 20px;">
-        <form action="" method="post">
-            <button type="submit" name="reset" style="
-                background-color: #444;
-                color: white;
-                padding: 10px 24px;
-                border: none;
-                border-radius: 8px;
-                font-size: 16px;
-                cursor: pointer;
-            ">🔄 Reset / Clear App</button>
-        </form>
-    </div>
-""", unsafe_allow_html=True)
-
-# Listen for button manually
-if st.session_state.get("reset"):
-    reset_app()
+    # ✅ Always-visible standalone Reset button (center-aligned)
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("🔄 Reset / Clear App"):
+            reset_app()
