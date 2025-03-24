@@ -1,7 +1,7 @@
 import streamlit as st
 import sys, os
 
-st.set_page_config(page_title="Financial Toolkit", layout="wide")
+st.set_page_config(page_title="Financial Toolkit", layout="centered")
 
 # Import the apps
 sys.path.append(os.path.abspath("pdf_app"))
