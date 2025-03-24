@@ -181,8 +181,22 @@ def run():
         st.info("👆 Upload files to begin.")
 
     # ✅ Always-visible standalone Reset button
-    st.markdown("---")
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        if st.button("🔄 Reset / Clear App"):
-            reset_app()
+    st.markdown("""
+    <div style="text-align: center; margin-top: 20px;">
+        <form action="" method="post">
+            <button type="submit" name="reset" style="
+                background-color: #444;
+                color: white;
+                padding: 10px 24px;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+            ">🔄 Reset / Clear App</button>
+        </form>
+    </div>
+""", unsafe_allow_html=True)
+
+# Listen for button manually
+if st.session_state.get("reset"):
+    reset_app()
