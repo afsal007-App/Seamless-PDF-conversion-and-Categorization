@@ -43,9 +43,14 @@ def run():
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
 
+    if "reset_triggered" in st.session_state:
+        if st.session_state["reset_triggered"]:
+            st.session_state.pop("converted_df_for_categorization", None)
+            st.session_state.pop("reset_triggered")
+
     def reset_app():
         st.session_state["uploader_key"] = str(uuid.uuid4())
-        st.session_state.pop("converted_df_for_categorization", None)
+        st.session_state["reset_triggered"] = True
         st.rerun()
 
     # ✅ Utility functions
