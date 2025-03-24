@@ -1,4 +1,4 @@
-# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab and Reset Button)
+# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab)
 
 import streamlit as st
 import pandas as pd
@@ -90,15 +90,6 @@ def run():
                     }, 500);
                 </script>
             """, unsafe_allow_html=True)
+
         else:
             st.warning("⚠️ No data returned from the selected bank's parser.")
-
-    # ✅ Reset button (center aligned)
-    # ✅ Reset button (center aligned)
-st.markdown("---")
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    if st.button("🔄 Reset / Clear Conversion"):
-        if "converted_df_for_categorization" in st.session_state:
-            st.session_state.pop("converted_df_for_categorization")
-        st.rerun()
