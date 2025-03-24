@@ -39,7 +39,7 @@ st.markdown("""
         background: linear-gradient(90deg, #00dbde, #fc00ff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: glow 2s ease-in-out infinite alternate;
+        
     }
 
     @keyframes glow {
