@@ -30,33 +30,52 @@ def run():
     st.markdown("""
         <style>
         .title {
-        font-size: 3rem;
-        font-weight: 900;
-        text-align: center;
-        padding-top: 1rem;
-        background: linear-gradient(90deg, #00dbde, #fc00ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: glow 2s ease-in-out infinite alternate;
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            padding-top: 0.5rem;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
         }
+
         .subtext {
             text-align: center;
-            font-size: 1.05rem;
-            color: #aaa;
-            margin-top: -10px;
-            margin-bottom: 30px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #bbbbbb;
+            margin-top: -8px;
+            margin-bottom: 25px;
         }
+
         .dropdown-label {
-            font-size: 1.2rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: #cdb4d4;
-            margin-bottom: 12px;
+            color: #e0d3f5;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
+
         hr {
             border: none;
             border-top: 1px solid rgba(255,255,255,0.1);
-            margin: 40px 0;
+            margin: 30px 0;
         }
+
+        /* Toast & button tweaks */
+        .element-container button {
+            font-size: 0.8rem !important;
+        }
+
+        .stAlert {
+            font-size: 0.85rem;
+        }
+
+        .stDataFrame {
+            font-size: 0.75rem;
+        }
+
         @keyframes glow {
             from { text-shadow: 0 0 5px #886dc7, 0 0 10px #cdb4d4; }
             to { text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99; }
