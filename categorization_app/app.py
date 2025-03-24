@@ -45,6 +45,7 @@ def run():
 
     def reset_app():
         st.session_state["uploader_key"] = str(uuid.uuid4())
+        st.session_state.pop("converted_df_for_categorization", None)
         st.rerun()
 
     col1, col2, col3 = st.columns([1, 1, 1])
