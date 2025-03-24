@@ -1,5 +1,3 @@
-# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab)
-
 import streamlit as st
 import pandas as pd
 from shared.core import save_converted_df
@@ -71,7 +69,12 @@ def run():
     selected_bank = st.selectbox("", list(bank_modules.keys()))
     st.markdown("<hr>", unsafe_allow_html=True)
 
-    if selected_bank:
+    uploaded_file = st.file_uploader("Upload your PDF file", type=["pdf"])
+    
+    if uploaded_file:
+        st.session_state["uploaded_file"] = uploaded_file
+
+    if "uploaded_file" in st.session_state and st.session_state["uploaded_file"] and selected_bank:
         df = bank_modules[selected_bank].run()
         if isinstance(df, pd.DataFrame):
             save_converted_df(df)
@@ -82,14 +85,15 @@ def run():
             st.toast("✅ PDF processed! Redirecting to Categorizer...", icon="🚀")
             st.session_state["converted_df_for_categorization"] = df
             st.session_state["active_tab"] = "Categorizer"
-
-            st.markdown("""
-                <script>
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 500);
-                </script>
-            """, unsafe_allow_html=True)
-
         else:
             st.warning("⚠️ No data returned from the selected bank's parser.")
+    
+    # Reset Button
+    if st.button("Reset"):
+        for key in ["uploaded_file", "converted_df_for_categorization", "active_tab"]:
+            if key in st.session_state:
+                del st.session_state[key]
+        st.experimental_rerun()
+
+if __name__ == "__main__":
+    run()
