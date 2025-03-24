@@ -26,12 +26,26 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='title'>Financial Toolkit</div>", unsafe_allow_html=True)
+# Page title
+st.markdown("<h1 style='text-align: center;'>📊 Financial Toolkit</h1>", unsafe_allow_html=True)
 
+# Initialize session state
+if "converted_df" not in st.session_state:
+    st.session_state.converted_df = None
+
+# Tabs
 tab1, tab2 = st.tabs(["📄 PDF to CSV Converter", "🧠 Categorizer"])
 
+# === PDF Converter Tab ===
 with tab1:
-    pdf_app.run()
+    st.markdown("### 🔄 Convert PDF to CSV")
+    df = pdf_app.run()
+    if isinstance(df, pd.DataFrame):
+        if st.button("📤 Send to Categorizer"):
+            st.session_state.converted_df = df
+            st.success("✅ Sent to Categorizer tab!")
 
+# === Categorizer Tab ===
 with tab2:
-    categorizer_app.run()
+    st.markdown("### 🧠 Categorize Transactions")
+    categorizer_app.run(preloaded_df=st.session_state.converted_df)
