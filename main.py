@@ -1,7 +1,6 @@
 import streamlit as st
 import sys, os
 
-st.set_page_config(page_title="🤖", layout="centered")
 st.set_page_config(page_title="Integrated Bot", layout="centered")
 
 
@@ -34,7 +33,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("🤖<div class='title'>Integrated Bot</div>", unsafe_allow_html=True)
+st.markdown(<div class='title'>"🤖 Integrated Bot</div>", unsafe_allow_html=True)
 
 # Tab switch
 default_tab = "📄 PDF to CSV Converter"
