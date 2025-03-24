@@ -85,7 +85,7 @@ def run():
 
     categorized_files = []
 
-    if "converted_df_for_categorization" in st.session_state:
+    if "converted_df_for_categorization" in st.session_state and st.session_state["converted_df_for_categorization"] is not None:
         st.subheader("📥 Categorize Data from PDF Conversion")
 
         with st.spinner('🚀 Loading master file...'):
@@ -187,12 +187,6 @@ def run():
     with col2:
         if st.button("🔄 Reset / Clear App"):
             reset_app()
-
-    # ✅ Trigger rerun outside widget execution
-    if st.session_state.get("converted_df_for_categorization"):
-        st.session_state.pop("converted_df_for_categorization")
-        st.rerun()
-
 
 # ✅ Run the app
 if __name__ == "__main__":
