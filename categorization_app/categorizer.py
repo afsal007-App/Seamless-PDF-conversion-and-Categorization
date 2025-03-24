@@ -55,7 +55,7 @@ def run():
 
         h1, h2, h3, h4 {
             font-size: 2rem !important;
-            font-weight: 600 !important;
+            font-weight: 800 !important;
             color: #f0f0f0 !important;
         }
 
