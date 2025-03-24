@@ -1,14 +1,18 @@
 import streamlit as st
 import sys, os
 
+# ✅ Set wide layout and page title
 st.set_page_config(page_title="Financial Toolkit", layout="wide")
 
+# ✅ Add app paths
 sys.path.append(os.path.abspath("pdf_app"))
 sys.path.append(os.path.abspath("categorization_app"))
 
+# ✅ Import PDF and Categorization apps
 import App as pdf_app
 import app as categorizer_app
 
+# ✅ Custom title UI
 st.markdown("""
     <style>
     .title {
@@ -25,16 +29,19 @@ st.markdown("""
 
 st.markdown("<div class='title'>📊 Financial Toolkit</div>", unsafe_allow_html=True)
 
-default_tab = 0
+# ✅ Determine which tab should open by default
+default_tab = "📄 PDF to CSV Converter"
 if st.session_state.get("active_tab") == "Categorizer":
-    default_tab = 1
-    st.session_state["active_tab"] = None
+    default_tab = "🧠 Categorizer"
+    st.session_state["active_tab"] = None  # Reset flag
 
+# ✅ Define tabs
 tab1, tab2 = st.tabs(["📄 PDF to CSV Converter", "🧠 Categorizer"])
-tabs = [tab1, tab2]
 
-with tabs[default_tab]:
-    if default_tab == 0:
+# ✅ Show each app inside respective tab
+with tab1:
+    if default_tab == "📄 PDF to CSV Converter":
         pdf_app.run()
-    else:
+with tab2:
+    if default_tab == "🧠 Categorizer":
         categorizer_app.run()
