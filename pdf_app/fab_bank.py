@@ -1,8 +1,9 @@
+# ✅ Updated FAB_Bank.py – Returns DataFrame to App.py
+
 import streamlit as st
 import PyPDF2
 import re
 import pandas as pd
-from io import BytesIO
 
 # Step 1: Extract cleaned lines
 def extract_clean_lines(pdf_file):
@@ -24,11 +25,11 @@ def extract_clean_lines(pdf_file):
                         lines.append(clean)
     return lines
 
-# Step 2: Check if line is start of transaction
+# Step 2: Identify transaction start line
 def is_transaction_start(line):
     return re.match(r"^\d{1,2} \w{3} \d{4}\s+\d{1,2} \w{3} \d{4}", line) is not None
 
-# Step 3: Group lines into transactions
+# Step 3: Group lines per transaction
 def group_transactions(lines):
     transactions = []
     current = []
@@ -89,7 +90,7 @@ def process_pdf(pdf_file, filename="uploaded.pdf"):
     df = pd.DataFrame(data)
     df['Source File'] = filename
 
-    # Filter out unwanted header-like rows
+    # Filter out header noise
     df['Description_clean'] = df['Description'].str.replace(r'\s+', ' ', regex=True).str.strip().str.lower()
     df = df[~df['Description_clean'].str.contains("date value date description debit credit balance")]
     df.drop(columns=['Description_clean'], inplace=True)
@@ -97,13 +98,14 @@ def process_pdf(pdf_file, filename="uploaded.pdf"):
     df[['Amount', 'Balance']] = df['Description'].apply(extract_amount_balance_from_description)
     return df
 
-# Step 7: Streamlit run function
+# Step 7: Streamlit entry point
 def run():
-    #st.header("Bank PDF Processor")
     st.subheader("Bank PDF Processor")
 
     uploaded_files = st.file_uploader("Upload FAB Bank PDF statements", type="pdf", accept_multiple_files=True)
     opening_balance_input = st.text_input("Enter Opening Balance (leave blank to auto-calculate)")
+
+    final_df = None
 
     if uploaded_files:
         try:
@@ -129,9 +131,11 @@ def run():
             final_df['Extracted Amount'] = final_df['Extracted Amount'].round(2)
 
             st.success("✅ Transactions Extracted")
-            st.dataframe(final_df)
+            st.dataframe(final_df, use_container_width=True)
 
             csv = final_df.to_csv(index=False).encode("utf-8")
-            st.download_button("Download CSV", csv, "fab_transactions.csv", "text/csv")
+            st.download_button("📥 Download CSV", csv, "fab_transactions.csv", "text/csv")
         else:
             st.warning("⚠️ No valid transactions found.")
+
+    return final_df
