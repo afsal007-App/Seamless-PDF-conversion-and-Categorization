@@ -50,12 +50,8 @@ def run():
     unsafe_allow_html=True
     )
 
-    uploaded_files = st.file_uploader(
-        "Upload PDF files",
-        type=["pdf"],
-        accept_multiple_files=True,
-        label_visibility="collapsed"
-    )
+    uploaded_files = st.file_uploader("Upload one or more Wio Bank PDF statements", type="pdf", accept_multiple_files=True)
+    
 
     combined_data = []
     final_df = None
