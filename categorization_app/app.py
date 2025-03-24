@@ -4,6 +4,7 @@ import re
 from io import BytesIO
 import zipfile
 import uuid
+import time
 
 # Master categorization file URL
 MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl54tKvqlo65Ug/export?format=xlsx"
@@ -59,8 +60,29 @@ def run():
     if just_reset:
         # Clear the reset flag
         st.session_state["just_reset"] = False
-        # Add a brief message to confirm reset
-        st.success("App has been reset successfully!")
+        # Create auto-dismissing message with HTML/JavaScript
+        st.markdown("""
+            <div id="success-message" style="
+                padding: 1rem; 
+                background-color: #d4edda; 
+                color: #155724; 
+                border-radius: 0.25rem; 
+                margin-bottom: 1rem;
+                animation: fadeOut 1s ease-in 3s forwards;">
+                ✅ App has been reset successfully!
+            </div>
+            <style>
+                @keyframes fadeOut {
+                    from { opacity: 1; }
+                    to { opacity: 0; display: none; }
+                }
+            </style>
+            <script>
+                setTimeout(function() {
+                    document.getElementById('success-message').style.display = 'none';
+                }, 4000); // 4 seconds total (3s delay + 1s fade)
+            </script>
+        """, unsafe_allow_html=True)
 
     # Initialize session state for uploader key if not exists
     if "uploader_key" not in st.session_state:
