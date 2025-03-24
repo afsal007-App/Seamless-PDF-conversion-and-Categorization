@@ -22,7 +22,7 @@ def run():
         }
 
         .center-title {
-            font-size: 4rem;
+            font-size: 2rem;
             font-weight: 800;
             text-align: center;
             padding-top: 0.5rem;
@@ -34,7 +34,7 @@ def run():
 
         .watermark {
             position: fixed;
-            bottom: 4px;
+            bottom: 2px;
             left: 0; right: 0;
             text-align: center;
             font-size: 11px;
