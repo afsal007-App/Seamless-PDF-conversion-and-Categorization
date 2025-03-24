@@ -10,9 +10,23 @@ sys.path.append(os.path.abspath("categorization_app"))
 import App as pdf_app
 import app as categorizer_app
 
-# Enhanced Styling
+# Custom Styling
 st.markdown("""
     <style>
+    /* Make main background transparent */
+    .main {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(8px);
+        border-radius: 16px;
+        padding: 2rem;
+    }
+
+    /* Adjust Streamlit default body background */
+    body {
+        background: linear-gradient(135deg, #1f1c2c, #928DAB) !important;
+        color: #f1f1f1 !important;
+    }
+
     /* Main Title Styling */
     .title {
         font-size: 2.5rem;
@@ -37,8 +51,8 @@ st.markdown("""
     /* Tabs Styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
-        border-bottom: 3px solid #e0aaff;
-        background-color: #f8f7ff;
+        border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.1);
         padding: 0.5rem 1rem;
         border-radius: 8px 8px 0 0;
         justify-content: center;
@@ -48,21 +62,21 @@ st.markdown("""
         font-size: 1rem;
         font-weight: 600;
         padding: 0.5rem 1rem;
-        color: #6c757d;
+        color: #f0f0f0;
         border: 2px solid transparent;
         border-radius: 8px 8px 0 0;
         transition: all 0.3s ease;
     }
 
     .stTabs [data-baseweb="tab"]:hover {
-        color: #3f3d56;
-        background-color: #e0aaff33;
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.15);
     }
 
     .stTabs [aria-selected="true"] {
-        color: #5e60ce;
-        background-color: #edf2fb;
-        border-bottom: 2px solid #5e60ce;
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.25);
+        border-bottom: 2px solid #e0aaff;
     }
     </style>
 """, unsafe_allow_html=True)
