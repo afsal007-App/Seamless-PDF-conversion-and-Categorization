@@ -22,7 +22,7 @@ def run():
         }
 
         .center-title {
-            font-size: 2rem;
+            font-size: 4rem;
             font-weight: 800;
             text-align: center;
             padding-top: 0.5rem;
