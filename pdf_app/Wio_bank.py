@@ -86,14 +86,9 @@ def run():
     """
     <style>
     .custom-title {
-        font-size: 16px;
-        font-weight: 500;
-        color: #4a4a4a;
-        margin-bottom: 0.8rem;
-        padding: 6px 12px;
-        border-left: 4px solid #6c63ff;
-        background-color: transparent;
-        border-radius: 4px;
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
     }
     </style>
     <div class="custom-title">Bank PDF Processor</div>
