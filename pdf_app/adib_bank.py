@@ -1,8 +1,9 @@
+# ✅ Updated ADIB_Bank.py – Streamlit-compatible and returns DataFrame to App.py
+
 import streamlit as st
 import fitz  # PyMuPDF
 import re
 import pandas as pd
-import io
 
 # === Patterns ===
 date_pattern = re.compile(r'^\d{2}-\d{2}-\d{4}$')
@@ -59,19 +60,20 @@ def extract_and_structure_transactions_from_bytes(file_bytes, filename):
         "Transaction Reference", "Debit", "Credit", "Running Balance", "Source File"
     ])
 
-    df = df[~df["Running Balance"].str.contains("Page", case=False, na=False)]
+    df = df[~df["Running Balance"].astype(str).str.contains("Page", case=False, na=False)]
 
     for col in ["Debit", "Credit", "Running Balance"]:
-        df[col] = pd.to_numeric(df[col].str.replace(",", ""), errors="coerce")
+        df[col] = pd.to_numeric(df[col].astype(str).str.replace(",", ""), errors="coerce")
 
     return df
 
 # === Streamlit Integration ===
 def run():
-    #st.title("Bank PDF Processor")
     st.subheader("Bank PDF Processor")
 
     uploaded_files = st.file_uploader("Upload ADIB Bank PDF statements", type="pdf", accept_multiple_files=True)
+
+    final_df = None
 
     if uploaded_files:
         combined_df = pd.DataFrame()
@@ -82,7 +84,8 @@ def run():
             combined_df = pd.concat([combined_df, df], ignore_index=True)
 
         if not combined_df.empty:
-            st.dataframe(combined_df)
+            st.success("✅ Transactions Extracted")
+            st.dataframe(combined_df, use_container_width=True)
 
             # Download as CSV
             csv_data = combined_df.to_csv(index=False).encode('utf-8')
@@ -93,3 +96,9 @@ def run():
                 mime="text/csv"
             )
 
+            # ✅ Return DataFrame to App.py
+            final_df = combined_df
+        else:
+            st.warning("⚠️ No transactions found in the uploaded files.")
+
+    return final_df
