@@ -94,10 +94,11 @@ def run():
             st.warning("⚠️ No data returned from the selected bank's parser.")
 
     # ✅ Reset button (center aligned)
-    st.markdown("---")
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        if st.button("🔄 Reset / Clear Conversion"):
-            if "converted_df_for_categorization" in st.session_state:
-                st.session_state.pop("converted_df_for_categorization")
-            st.experimental_rerun()
+    # ✅ Reset button (center aligned)
+st.markdown("---")
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    if st.button("🔄 Reset / Clear Conversion"):
+        if "converted_df_for_categorization" in st.session_state:
+            st.session_state.pop("converted_df_for_categorization")
+        st.rerun()
