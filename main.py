@@ -26,7 +26,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='title'>📊 Financial Toolkit</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>Financial Toolkit</div>", unsafe_allow_html=True)
 
 tab1, tab2 = st.tabs(["📄 PDF to CSV Converter", "🧠 Categorizer"])
 
