@@ -98,7 +98,7 @@ def run():
     """,
     unsafe_allow_html=True
     )
-    uploaded_files = st.file_uploader("Upload one or more PDF files", type="pdf", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload one or more RAK Bank PDF files", type="pdf", accept_multiple_files=True)
 
     all_transactions = []
     final_df = None
