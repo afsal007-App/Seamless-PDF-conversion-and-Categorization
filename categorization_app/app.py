@@ -1,3 +1,5 @@
+# ✅ Full Categorization App (app.py)
+
 import streamlit as st
 import pandas as pd
 import re
@@ -38,7 +40,6 @@ def run():
         <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
     """, unsafe_allow_html=True)
 
-    # ✅ Session state for reset
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
 
@@ -79,9 +80,9 @@ def run():
         statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
         return statement_df
 
-    # ✅ If PDF data was pushed from the converter
+    # ✅ If data is pushed from PDF conversion
     if "converted_df_for_categorization" in st.session_state:
-        st.subheader("📥 Categorize PDF Converted Data")
+        st.subheader("📥 Categorize Data from PDF Conversion")
 
         with st.spinner('🚀 Loading master file...'):
             master_df = load_master_file()
@@ -111,7 +112,7 @@ def run():
         else:
             st.error("⚠️ Master file could not be loaded.")
 
-    # ✅ Fallback: Manual upload
+    # ✅ Fallback manual uploader
     st.markdown("---")
     uploaded_files = st.file_uploader(
         "📂 Upload Statement Files (Excel or CSV)",
