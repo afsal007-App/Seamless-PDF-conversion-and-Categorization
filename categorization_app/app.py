@@ -80,7 +80,7 @@ def run():
             <script>
                 setTimeout(function() {
                     document.getElementById('success-message').style.display = 'none';
-                }, 4000); // 4 seconds total (3s delay + 1s fade)
+                }, 4000); // 2 seconds total (1s delay + 1s fade)
             </script>
         """, unsafe_allow_html=True)
 
