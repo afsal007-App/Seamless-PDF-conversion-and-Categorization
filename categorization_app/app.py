@@ -53,7 +53,7 @@ def run():
         for key in ["converted_df_for_categorization", "uploader_key"]:
             st.session_state.pop(key, None)
         st.session_state["uploader_key"] = str(uuid.uuid4())
-        st.session_state["should_rerun"] = True  # 👈 Flag-based rerun trigger
+        st.session_state["converted_df_for_categorization"] = True  # 👈 Flag-based rerun trigger
 
     # ✅ Utility functions
     def clean_text(text):
@@ -189,8 +189,8 @@ def run():
             reset_app()
 
     # ✅ Trigger rerun outside widget execution
-    if st.session_state.get("should_rerun"):
-        st.session_state.pop("should_rerun")
+    if st.session_state.get("converted_df_for_categorization"):
+        st.session_state.pop("converted_df_for_categorization")
         st.rerun()
 
 
