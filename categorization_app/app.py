@@ -56,8 +56,7 @@ def run():
             st.session_state.pop("reset_triggered")
 
     def reset_app():
-        st.session_state["uploader_key"] = str(uuid.uuid4())
-        st.session_state["reset_triggered"] = True
+        st.session_state.clear()
         st.rerun()
 
     # ✅ Utility functions
