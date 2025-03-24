@@ -21,8 +21,8 @@ def run():
         "🏢 Emirates Islamic Bank": emirates_islamic_bank,
         "🏬 FAB Bank": fab_bank,
         "🏛️ WIO Bank": Wio_bank,
-        "🏤 ADIB Bank": adib_bank,
-        "🏤 Mashreq Neo Bank": mashreq,
+        "🏚️ ADIB Bank": adib_bank,
+        "🏠 Mashreq Neo Bank": mashreq,
         "🏤 ADCB Bank": adcb
     }
 
