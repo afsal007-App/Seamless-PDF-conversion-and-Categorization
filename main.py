@@ -22,7 +22,7 @@ st.markdown("""
         background-color: rgba(255, 255, 255, 0.04) !important;
         backdrop-filter: blur(6px);
         border-radius: 12px;
-        padding: 2rem;
+        padding: 3rem;
     }
 
     .title {
