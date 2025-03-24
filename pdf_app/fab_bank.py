@@ -103,6 +103,23 @@ def extract_number(filename):
 
 # Step 8: Streamlit entry point
 def run():
+    # ✅ Added Instructions Box
+    st.markdown(
+        """
+        <div style="background-color:#f0f8ff; padding: 15px; border-radius: 10px; border-left: 6px solid #2c7be5;">
+            <h4 style="margin-top:0;">📄 Instructions for Uploading PDFs:</h4>
+            <ul>
+                <li>Upload one or more <strong>FAB Bank PDF statements</strong>.</li>
+                <li>Rename files in order (e.g., <code>Statement1.pdf</code>, <code>Statement2.pdf</code>) for proper sorting.</li>
+                <li>Ensure the files are <strong>text-based PDFs</strong> (not scanned images).</li>
+                <li>You can enter an <strong>Opening Balance</strong> if needed, or leave it blank to auto-calculate.</li>
+                <li>Once uploaded, transactions will be extracted and shown below with download option.</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.markdown(
         """
         <style>
