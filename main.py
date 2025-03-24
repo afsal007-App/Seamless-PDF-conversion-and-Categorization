@@ -15,7 +15,7 @@ import app as categorizer_app  # same name is fine due to import order
 st.markdown("""
     <style>
     .title {
-        font-size: 2.2rem;
+        font-size: 1.2rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 1rem;
