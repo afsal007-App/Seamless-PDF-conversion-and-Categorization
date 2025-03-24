@@ -1,8 +1,11 @@
+# ✅ Updated App.py (PDF to CSV Converter + Inline Categorizer Preview)
+
 import streamlit as st
 import pandas as pd
 from shared.core import save_converted_df
+from io import BytesIO
 
-# Import your specific bank modules
+# Import bank modules
 import Rak_Bank
 import al_jazira_bank
 import emirates_islamic_bank
@@ -11,6 +14,36 @@ import Wio_bank
 import adib_bank
 import mashreq
 import adcb
+
+# 🔁 Categorizer utility functions (moved from categorization app)
+def clean_text(text):
+    import re
+    return re.sub(r'\s+', ' ', str(text).lower().replace('–', '-').replace('—', '-')).strip()
+
+def load_master_file():
+    url = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl54tKvqlo65Ug/export?format=xlsx"
+    try:
+        df = pd.read_excel(url)
+        df['Key Word'] = df['Key Word'].astype(str).apply(clean_text)
+        return df
+    except Exception as e:
+        st.error(f"⚠️ Error loading master file: {e}")
+        return pd.DataFrame()
+
+def find_description_column(columns):
+    possible = ['description', 'details', 'narration', 'particulars', 'transaction details', 'remarks']
+    return next((col for col in columns if any(name in col.lower() for name in possible)), None)
+
+def categorize_description(description, master_df):
+    cleaned = clean_text(description)
+    for _, row in master_df.iterrows():
+        if row['Key Word'] and row['Key Word'] in cleaned:
+            return row['Category']
+    return 'Uncategorized'
+
+def categorize_statement(statement_df, master_df, desc_col):
+    statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
+    return statement_df
 
 def run():
     bank_modules = {
@@ -23,6 +56,7 @@ def run():
         "🏤 ADCB Bank": adcb
     }
 
+    # UI Styling
     st.markdown("""
         <style>
         .title {
@@ -61,7 +95,7 @@ def run():
     """, unsafe_allow_html=True)
 
     st.markdown("<div class='title'>Bank Statement PDF Extractor</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data 📄 ➡️ 📊</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data \U0001F4C4 ➡️ \U0001F4C8</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="dropdown-label"> Select Your Bank</div>', unsafe_allow_html=True)
     selected_bank = st.selectbox("", list(bank_modules.keys()))
@@ -71,12 +105,34 @@ def run():
         df = bank_modules[selected_bank].run()
         if isinstance(df, pd.DataFrame):
             save_converted_df(df)
-            st.session_state["converted_df_for_categorization"] = df
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
 
-            if st.button("🚀 Push to Categorizer"):
-                st.session_state["active_tab"] = "Categorizer"
-                st.rerun()
+            # 🔁 Inline categorization
+            st.subheader("🧠 Categorization Preview")
+
+            with st.spinner("Loading master file..."):
+                master_df = load_master_file()
+
+            if not master_df.empty:
+                desc_col = find_description_column(df.columns)
+                if desc_col:
+                    categorized_df = categorize_statement(df.copy(), master_df, desc_col)
+                    st.success("✅ Categorized successfully!")
+                    st.dataframe(categorized_df.head(), use_container_width=True)
+
+                    buffer = BytesIO()
+                    categorized_df.to_excel(buffer, index=False)
+                    buffer.seek(0)
+                    st.download_button(
+                        label="📥 Download Categorized Output",
+                        data=buffer,
+                        file_name="Categorized_Output.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+                else:
+                    st.warning("⚠️ Could not find a valid description column.")
+            else:
+                st.error("⚠️ Master categorization file failed to load.")
         else:
             st.warning("⚠️ No data returned from the selected bank's parser.")
