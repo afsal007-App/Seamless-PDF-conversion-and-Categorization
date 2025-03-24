@@ -1,3 +1,5 @@
+# ✅ Updated Emirates_Islamic_Bank.py – Returns DataFrame to App.py
+
 import pdfplumber
 import pandas as pd
 import streamlit as st
@@ -83,7 +85,6 @@ def process(pdf_files):
 # -------------------- Streamlit UI --------------------
 
 def run():
-    #st.header("Bank PDF Processor")
     st.subheader("Bank PDF Processor")
 
     uploaded_files = st.file_uploader(
@@ -92,15 +93,22 @@ def run():
         accept_multiple_files=True
     )
 
+    final_df = None
+
     if uploaded_files:
         st.info("Processing uploaded files...")
         df = process(uploaded_files)
 
         if df.empty:
-            st.warning("No transactions found.")
+            st.warning("⚠️ No transactions found.")
         else:
-            st.success("Transactions extracted successfully!")
-            st.dataframe(df)
+            st.success("✅ Transactions extracted successfully!")
+            st.dataframe(df, use_container_width=True)
 
             csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button("Download CSV", csv, "emirates_islamic_transactions.csv", "text/csv")
+            st.download_button("📥 Download CSV", csv, "emirates_islamic_transactions.csv", "text/csv")
+
+            # ✅ Return to App.py
+            final_df = df
+
+    return final_df
