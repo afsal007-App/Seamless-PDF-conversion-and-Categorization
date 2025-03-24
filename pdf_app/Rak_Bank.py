@@ -104,10 +104,12 @@ def run():
     final_df = None
 
     if uploaded_files:
-        for uploaded_file in uploaded_files:
-            st.info(f"Processing: {uploaded_file.name}")
-            transactions = process_pdf(uploaded_file, uploaded_file.name)
-            all_transactions.extend(transactions)
+    # Sort uploaded files by filename
+    uploaded_files = sorted(uploaded_files, key=lambda x: x.name.lower())
+    for uploaded_file in uploaded_files:
+        st.info(f"Processing: {uploaded_file.name}")
+        transactions = process_pdf(uploaded_file, uploaded_file.name)
+        all_transactions.extend(transactions)
 
         if all_transactions:
             df = pd.DataFrame(all_transactions)
