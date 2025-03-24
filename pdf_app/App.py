@@ -95,4 +95,4 @@ def run():
     # Reset Button
     if st.button("Reset"):
         st.session_state.clear()
-        st.experimental_rerun()
+        st.rerun()
