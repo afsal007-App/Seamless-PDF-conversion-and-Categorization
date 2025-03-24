@@ -109,4 +109,4 @@ def run():
             """, unsafe_allow_html=True)
 
         else:
-            st.warning("⚠️ No data returned from the selected bank's parser.")
+            st.warning("⚠️ No pdf found/Data found")
