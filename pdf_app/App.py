@@ -1,6 +1,9 @@
+# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab)
+
 import streamlit as st
 import pandas as pd
 from shared.core import save_converted_df
+from io import BytesIO
 
 # Import bank modules
 import Rak_Bank
@@ -23,6 +26,7 @@ def run():
         "🏤 ADCB Bank": adcb
     }
 
+    # UI Styling
     st.markdown("""
         <style>
         .title {
@@ -61,7 +65,7 @@ def run():
     """, unsafe_allow_html=True)
 
     st.markdown("<div class='title'>Bank Statement PDF Extractor</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data \U0001F4C4 ➞ \U0001F4C8</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data \U0001F4C4 ➡️ \U0001F4C8</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="dropdown-label"> Select Your Bank</div>', unsafe_allow_html=True)
     selected_bank = st.selectbox("", list(bank_modules.keys()))
@@ -69,28 +73,23 @@ def run():
 
     if selected_bank:
         df = bank_modules[selected_bank].run()
-        if isinstance(df, pd.DataFrame) and not df.empty:
+        if isinstance(df, pd.DataFrame):
             save_converted_df(df)
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
 
+            # ✅ Auto-push to Categorizer Tab with smooth toast & JS redirect
             st.toast("✅ PDF processed! Redirecting to Categorizer...", icon="🚀")
             st.session_state["converted_df_for_categorization"] = df
             st.session_state["active_tab"] = "Categorizer"
 
-        else:
-            st.warning("⚠️ No valid data returned from the selected bank's parser.")
-    
-    # Reset Button
-    if st.button("Reset"):
-        keys_to_clear = [
-            "converted_df_for_categorization", 
-            "active_tab",
-            "uploaded_file"
-        ]
-        
-        for key in keys_to_clear:
-            if key in st.session_state:
-                del st.session_state[key]
+            st.markdown("""
+                <script>
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                </script>
+            """, unsafe_allow_html=True)
 
-        st.rerun()  # ✅ Use st.rerun() instead of deprecated st.experimental_rerun()
+        else:
+            st.warning("⚠️ No data returned from the selected bank's parser.")
