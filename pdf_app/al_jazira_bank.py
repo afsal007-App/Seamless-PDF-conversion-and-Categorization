@@ -65,13 +65,21 @@ def process(pdf_files):
 # ✅ Required run() function for Streamlit
 def run():
     #st.header("Bank PDF Processor")
-    st.subheader("Bank PDF Processor")
-
-    uploaded_files = st.file_uploader(
-        "Upload Al Jazira Bank PDF statements",
-        type="pdf",
-        accept_multiple_files=True
+    st.markdown(
+    """
+    <style>
+    .custom-title {
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
     )
+
+    uploaded_files = st.file_uploader("Upload one or more Al Jazira Bank PDF statements", type="pdf", accept_multiple_files=True)
 
     if uploaded_files:
         df = process(uploaded_files)
