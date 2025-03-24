@@ -68,6 +68,8 @@ def run():
         # Reinitialize necessary keys
         st.session_state["uploader_key"] = str(uuid.uuid4())
         st.session_state["converted_df_for_categorization"] = None
+        # Force the app to rerun after clearing state
+        st.rerun()
 
     # Utility functions
     def clean_text(text):
