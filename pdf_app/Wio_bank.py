@@ -1,3 +1,5 @@
+# ✅ Updated Wio_Bank.py – PDF Parser that returns DataFrame to App.py
+
 import streamlit as st
 import pdfplumber
 import re
@@ -84,6 +86,8 @@ def run():
 
     uploaded_files = st.file_uploader("Upload one or more Wio Bank PDF statements", type="pdf", accept_multiple_files=True)
 
+    final_df = None
+
     if uploaded_files:
         st.info("Processing uploaded file(s)...")
         df = process_wio_pdfs(uploaded_files)
@@ -92,7 +96,11 @@ def run():
             st.warning("⚠️ No transactions found in any uploaded files.")
         else:
             st.success(f"✅ Extracted {len(df)} transactions from {len(uploaded_files)} PDF(s)")
-            st.dataframe(df)
+            st.dataframe(df, use_container_width=True)
 
             csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button("Download CSV", csv, "wio_bank_transactions.csv", "text/csv")
+            st.download_button("📥 Download CSV", csv, "wio_bank_transactions.csv", "text/csv")
+
+            final_df = df
+
+    return final_df
