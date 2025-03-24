@@ -5,11 +5,11 @@ from io import BytesIO
 import zipfile
 import uuid
 
-# ✅ Master categorization file URL
+# Master categorization file URL
 MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl54tKvqlo65Ug/export?format=xlsx"
 
 def run():
-    # 🎨 CSS & UI
+    # Custom CSS for styling the app
     st.markdown("""
         <style>
         [data-testid="stToolbar"] { visibility: hidden !important; }
@@ -18,14 +18,14 @@ def run():
             color: #e0e0e0; font-size: 12px;
         }
         .center-title {
-        font-size: 3rem;
-        font-weight: 900;
-        text-align: center;
-        padding-top: 1rem;
-        background: linear-gradient(90deg, #00dbde, #fc00ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: glow 2s ease-in-out infinite alternate;
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            padding-top: 1rem;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
         }
         .watermark {
             position: fixed; bottom: 5px; left: 0; right: 0;
@@ -41,30 +41,32 @@ def run():
             font-size: 16px;
         }
         </style>
-        <h1 class="center-title"> Categorization Bot</h1>
+        <h1 class="center-title">Categorization Bot</h1>
         <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
     """, unsafe_allow_html=True)
 
+    # Initialize session state for uploader key if not exists
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
 
-    # ✅ Stable reset method using a flag
+    # Enhanced reset function to clear session state
     def reset_app():
-        # Remove session variables related to categorization
-        for key in ["converted_df_for_categorization", "uploader_key"]:
-            if key in st.session_state:
-                del st.session_state[key]  # Using `del` to remove keys from session state
-        st.session_state["uploader_key"] = str(uuid.uuid4())  # Re-create the uploader key for a fresh start
-        st.session_state["converted_df_for_categorization"] = None  # Ensure this is cleared
-        
-        # Debugging print to check session state
-        print("Session state after reset:", st.session_state)
+        # List any keys to preserve (e.g., authentication keys); currently none
+        keys_to_keep = []
+        for key in list(st.session_state.keys()):
+            if key not in keys_to_keep:
+                del st.session_state[key]
+        # Reinitialize necessary keys
+        st.session_state["uploader_key"] = str(uuid.uuid4())
+        st.session_state["converted_df_for_categorization"] = None
 
-    # ✅ Utility functions
+    # Utility functions
     def clean_text(text):
+        """Clean text by converting to lowercase, normalizing dashes, and removing extra spaces."""
         return re.sub(r'\s+', ' ', str(text).lower().replace('–', '-').replace('—', '-')).strip()
 
     def load_master_file():
+        """Load the master categorization file from the provided URL."""
         try:
             df = pd.read_excel(MASTER_SHEET_URL)
             df['Key Word'] = df['Key Word'].astype(str).apply(clean_text)
@@ -74,10 +76,12 @@ def run():
             return pd.DataFrame()
 
     def find_description_column(columns):
+        """Identify the description column in the dataframe."""
         possible = ['description', 'details', 'narration', 'particulars', 'transaction details', 'remarks']
         return next((col for col in columns if any(name in col.lower() for name in possible)), None)
 
     def categorize_description(description, master_df):
+        """Categorize a single description based on keywords in the master file."""
         cleaned = clean_text(description)
         for _, row in master_df.iterrows():
             if row['Key Word'] and row['Key Word'] in cleaned:
@@ -85,12 +89,13 @@ def run():
         return 'Uncategorized'
 
     def categorize_statement(statement_df, master_df, desc_col):
+        """Apply categorization to all rows in the statement dataframe."""
         statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
         return statement_df
 
     categorized_files = []
 
-    # ✅ Check for the presence of the "converted_df_for_categorization" session state value
+    # Handle pre-converted dataframe from session state, if present
     if "converted_df_for_categorization" in st.session_state and st.session_state["converted_df_for_categorization"] is not None:
         st.subheader("📥 Categorize Data from PDF Conversion")
 
@@ -124,7 +129,7 @@ def run():
         else:
             st.error("⚠️ Master file could not be loaded.")
 
-    # ✅ Fallback manual uploader
+    # Manual file uploader section
     st.markdown("---")
     uploaded_files = st.file_uploader(
         "📂 Upload Statement Files (Excel or CSV)",
@@ -171,6 +176,7 @@ def run():
                 else:
                     st.error(f"⚠️ No description column found in {file.name}.")
 
+    # Provide option to download all categorized files as a ZIP
     if categorized_files:
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w") as zipf:
@@ -187,13 +193,14 @@ def run():
     elif not uploaded_files:
         st.info("👆 Upload files to begin.")
 
-    # ✅ Reset Button (safe)
+    # Reset button to clear the app
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("🔄 Reset / Clear App"):
-            reset_app()  # This clears the session state without triggering rerun
+            reset_app()
+            st.success("App has been reset!")  # Brief feedback before rerun
 
-# ✅ Run the app
+# Run the app
 if __name__ == "__main__":
     run()
