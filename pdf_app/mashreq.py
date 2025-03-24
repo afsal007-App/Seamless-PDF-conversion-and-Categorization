@@ -5,22 +5,54 @@ import streamlit as st
 
 def run():
     st.markdown(
-    """
-    <style>
-    .custom-title {
-        font-size: 18px !important;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    </style>
-    <div class="custom-title">Bank PDF Processor</div>
-    """,
-    unsafe_allow_html=True
+        """
+        <style>
+        .custom-title {
+            font-size: 18px !important;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        </style>
+        <div class="custom-title">Bank PDF Processor</div>
+        """,
+        unsafe_allow_html=True
     )
 
     uploaded_files = st.file_uploader("Upload one or more Mashreq Bank PDF statements", type="pdf", accept_multiple_files=True)
-
     opening_balance_input = st.text_input("Enter Opening Balance (leave blank to auto-calculate)")
+
+    # ✅ Instruction Box (placed below upload and input)
+    st.markdown(
+        """
+        <style>
+        .instructions-box {
+            padding: 1.2rem;
+            border-left: 6px solid #2c7be5;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.0);
+            color: var(--text-color);
+        }
+        .instructions-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .instructions-box ul {
+            padding-left: 1.2rem;
+        }
+        </style>
+
+        <div class="instructions-box">
+        <div class="instructions-title">📄 Instructions for Uploading PDFs:</div>
+            <ul>
+                <li>Upload one or more <strong>Mashreq Bank PDF statements</strong>.</li>
+                <li>Rename files in order (e.g., <code>Mashreq1.pdf</code>, <code>Mashreq2.pdf</code>) for proper sorting.</li>
+                </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     try:
         opening_balance = float(opening_balance_input.replace(",", "")) if opening_balance_input else None
@@ -32,12 +64,10 @@ def run():
         st.info("📂 Please upload PDF files to begin.")
         return None
 
-    # ✅ Helper to extract number from filename for sorting
     def extract_number(filename):
         numbers = re.findall(r'\d+', filename)
         return int(numbers[0]) if numbers else float('inf')
 
-    # ✅ Sort files numerically by filename
     uploaded_files = sorted(uploaded_files, key=lambda x: extract_number(x.name))
 
     unwanted_phrases = [
@@ -146,6 +176,5 @@ def run():
 
     return final_df
 
-# Standalone test
 if __name__ == "__main__":
     run()
