@@ -79,7 +79,40 @@ def run():
         statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
         return statement_df
 
-    # 📂 File Upload
+    # ✅ If PDF data was pushed from the converter
+    if "converted_df_for_categorization" in st.session_state:
+        st.subheader("📥 Categorize PDF Converted Data")
+
+        with st.spinner('🚀 Loading master file...'):
+            master_df = load_master_file()
+
+        if not master_df.empty:
+            statement_df = st.session_state.pop("converted_df_for_categorization")
+            st.dataframe(statement_df.head(), use_container_width=True)
+            desc_col = find_description_column(statement_df.columns)
+
+            if desc_col:
+                categorized = categorize_statement(statement_df, master_df, desc_col)
+                st.success("✅ Data categorized successfully!")
+                st.dataframe(categorized.head(), use_container_width=True)
+
+                buffer = BytesIO()
+                categorized.to_excel(buffer, index=False)
+                buffer.seek(0)
+
+                st.download_button(
+                    label="📥 Download Categorized Data",
+                    data=buffer,
+                    file_name="Categorized_PDF_Output.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+            else:
+                st.error("⚠️ No description column found for categorization.")
+        else:
+            st.error("⚠️ Master file could not be loaded.")
+
+    # ✅ Fallback: Manual upload
+    st.markdown("---")
     uploaded_files = st.file_uploader(
         "📂 Upload Statement Files (Excel or CSV)",
         type=["xlsx", "csv"],
