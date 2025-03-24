@@ -1,5 +1,3 @@
-# ✅ Full Categorization App (app.py)
-
 import streamlit as st
 import pandas as pd
 import re
@@ -50,11 +48,12 @@ def run():
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
 
+    # ✅ Stable reset method using a flag
     def reset_app():
         for key in ["converted_df_for_categorization", "uploader_key"]:
             st.session_state.pop(key, None)
         st.session_state["uploader_key"] = str(uuid.uuid4())
-        st.experimental_rerun()
+        st.session_state["should_rerun"] = True  # 👈 Flag-based rerun trigger
 
     # ✅ Utility functions
     def clean_text(text):
@@ -84,9 +83,8 @@ def run():
         statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
         return statement_df
 
-    categorized_files = []  # <- collect categorized outputs for ZIP
+    categorized_files = []
 
-    # ✅ If data is pushed from PDF conversion
     if "converted_df_for_categorization" in st.session_state:
         st.subheader("📥 Categorize Data from PDF Conversion")
 
@@ -183,9 +181,19 @@ def run():
     elif not uploaded_files:
         st.info("👆 Upload files to begin.")
 
-    # ✅ Always-visible standalone Reset button (center-aligned)
+    # ✅ Reset Button (safe)
     st.markdown("---")
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("🔄 Reset / Clear App"):
             reset_app()
+
+    # ✅ Trigger rerun outside widget execution
+    if st.session_state.get("should_rerun"):
+        st.session_state.pop("should_rerun")
+        st.rerun()
+
+
+# ✅ Run the app
+if __name__ == "__main__":
+    run()
