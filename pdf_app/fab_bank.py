@@ -1,5 +1,3 @@
-# ✅ Updated FAB_Bank.py – Returns DataFrame to App.py
-
 import streamlit as st
 import PyPDF2
 import re
@@ -98,23 +96,28 @@ def process_pdf(pdf_file, filename="uploaded.pdf"):
     df[['Amount', 'Balance']] = df['Description'].apply(extract_amount_balance_from_description)
     return df
 
-# Step 7: Streamlit entry point
+# Step 7: Extract number for filename sorting
+def extract_number(filename):
+    numbers = re.findall(r'\d+', filename)
+    return int(numbers[0]) if numbers else float('inf')
+
+# Step 8: Streamlit entry point
 def run():
     st.markdown(
-    """
-    <style>
-    .custom-title {
-        font-size: 18px !important;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    </style>
-    <div class="custom-title">Bank PDF Processor</div>
-    """,
-    unsafe_allow_html=True
+        """
+        <style>
+        .custom-title {
+            font-size: 18px !important;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        </style>
+        <div class="custom-title">Bank PDF Processor</div>
+        """,
+        unsafe_allow_html=True
     )
 
-    uploaded_files = st.file_uploader("Upload one or more FAb Bank PDF statements", type="pdf", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload one or more FAB Bank PDF statements", type="pdf", accept_multiple_files=True)
     opening_balance_input = st.text_input("Enter Opening Balance (leave blank to auto-calculate)")
 
     final_df = None
@@ -125,6 +128,9 @@ def run():
         except ValueError:
             st.error("Opening balance must be numeric.")
             return
+
+        # ✅ Sort uploaded files by number in filename
+        uploaded_files = sorted(uploaded_files, key=lambda x: extract_number(x.name))
 
         all_dfs = []
         for file in uploaded_files:
