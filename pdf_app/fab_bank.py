@@ -103,23 +103,6 @@ def extract_number(filename):
 
 # Step 8: Streamlit entry point
 def run():
-    # ✅ Dark-mode friendly instruction box
-    st.markdown(
-        """
-        <div style="background-color:#1e1e1e; padding: 15px; border-radius: 10px; border-left: 6px solid #2c7be5;">
-            <h4 style="margin-top:0; color: #ffffff;">📄 Instructions for Uploading PDFs:</h4>
-            <ul style="color: #cccccc;">
-                <li>Upload one or more <strong>FAB Bank PDF statements</strong>.</li>
-                <li>Rename files in order (e.g., <code>Statement1.pdf</code>, <code>Statement2.pdf</code>) for proper sorting.</li>
-                <li>Ensure the files are <strong>text-based PDFs</strong> (not scanned images).</li>
-                <li>You can enter an <strong>Opening Balance</strong> if needed, or leave it blank to auto-calculate.</li>
-                <li>Once uploaded, transactions will be extracted and shown below with download option.</li>
-            </ul>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
     st.markdown(
         """
         <style>
@@ -139,6 +122,41 @@ def run():
 
     final_df = None
 
+    # ✅ Transparent, theme-aware instruction box (placed after uploader)
+    st.markdown(
+        """
+        <style>
+        .instructions-box {
+            padding: 1.2rem;
+            border-left: 6px solid #2c7be5;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.0);
+            color: var(--text-color);
+        }
+        .instructions-box h4 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .instructions-box ul {
+            padding-left: 1.2rem;
+        }
+        </style>
+
+        <div class="instructions-box">
+            <h4>📄 Instructions for Uploading PDFs:</h4>
+            <ul>
+                <li>Upload one or more <strong>FAB Bank PDF statements</strong>.</li>
+                <li>Rename files in order (e.g., <code>Statement1.pdf</code>, <code>Statement2.pdf</code>) for proper sorting.</li>
+                <li>Ensure the files are <strong>text-based PDFs</strong> (not scanned images).</li>
+                <li>You can enter an <strong>Opening Balance</strong> if needed, or leave it blank to auto-calculate.</li>
+                <li>Once uploaded, transactions will be extracted and shown below with download option.</li>
+            </ul>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     if uploaded_files:
         try:
             opening_balance = float(opening_balance_input) if opening_balance_input.strip() else None
@@ -146,7 +164,6 @@ def run():
             st.error("Opening balance must be numeric.")
             return
 
-        # ✅ Sort uploaded files by number in filename
         uploaded_files = sorted(uploaded_files, key=lambda x: extract_number(x.name))
 
         all_dfs = []
