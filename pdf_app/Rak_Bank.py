@@ -1,11 +1,9 @@
-# Rak_Bank.py – Example Streamlit-compatible Bank Parser Module
+# ✅ Fixed Rak_Bank.py – Streamlit-compatible + returns DataFrame to App.py
 
 import fitz  # PyMuPDF
 import re
 import pandas as pd
-import os
 import streamlit as st
-from io import BytesIO
 
 # Regular expression to identify date format
 date_pattern = re.compile(r'^\d{2}-[A-Za-z]{3}-\d{4}')
@@ -90,8 +88,10 @@ def run():
     st.subheader("Bank PDF Processor")
     uploaded_files = st.file_uploader("Upload one or more PDF files", type="pdf", accept_multiple_files=True)
 
+    all_transactions = []
+    final_df = None
+
     if uploaded_files:
-        all_transactions = []
         for uploaded_file in uploaded_files:
             st.info(f"Processing: {uploaded_file.name}")
             transactions = process_pdf(uploaded_file, uploaded_file.name)
@@ -100,15 +100,20 @@ def run():
         if all_transactions:
             df = pd.DataFrame(all_transactions)
 
-            # Drop unwanted description lines
+            # Clean out noisy lines
             df = df[~df["Description"].str.contains(
                 "account type: current account|الإصدار|مدة الكشف",
                 case=False, na=False
             )]
 
-            st.success("Transactions Extracted:")
-            st.dataframe(df)
+            st.success("✅ Transactions Extracted")
+            st.dataframe(df, use_container_width=True)
 
-            # CSV download
+            # Download CSV
             csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button("Download CSV", csv, "transactions.csv", "text/csv")
+            st.download_button("📥 Download CSV", csv, "transactions.csv", "text/csv")
+
+            # ✅ RETURN final DataFrame to App.py
+            final_df = df
+
+    return final_df
