@@ -93,5 +93,4 @@ def run():
             if key in st.session_state:
                 del st.session_state[key]
 
-        st.experimental_rerun()  # Force a full refresh to clear the uploaded file and other states
-
+        st.rerun()  # ✅ Use st.rerun() instead of deprecated st.experimental_rerun()
