@@ -82,7 +82,25 @@ def process_wio_pdfs(pdf_files):
 # ---------------------- Streamlit UI ----------------------
 
 def run():
-    st.markdown('<p style="font-size:16px; font-weight:500; color:#ccc;">Wio Bank Statement Parser</p>', unsafe_allow_html=True)
+    st.markdown(
+    """
+    <style>
+    .custom-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #4a4a4a;
+        margin-bottom: 0.8rem;
+        padding: 6px 12px;
+        border-left: 4px solid #6c63ff;
+        background-color: transparent;
+        border-radius: 4px;
+    }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
+    )
+
 
     uploaded_files = st.file_uploader("Upload one or more Wio Bank PDF statements", type="pdf", accept_multiple_files=True)
 
