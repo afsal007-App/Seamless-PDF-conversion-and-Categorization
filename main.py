@@ -32,7 +32,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("🤖"+<div class='title'>Integrated Bot</div>", unsafe_allow_html=True)
+st.markdown("🤖"<div class='title'>Integrated Bot</div>", unsafe_allow_html=True)
 
 # Tab switch
 default_tab = "📄 PDF to CSV Converter"
