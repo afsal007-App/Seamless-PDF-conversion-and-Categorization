@@ -22,6 +22,13 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+     @keyframes glow {
+        from {
+            text-shadow: 0 0 05px ##886dc7, 0 0 10px ##cdb4d4;
+        }
+        to {
+            text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99;
+        }
     </style>
 """, unsafe_allow_html=True)
 
