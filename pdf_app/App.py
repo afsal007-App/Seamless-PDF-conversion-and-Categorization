@@ -37,7 +37,7 @@ def run():
             background: linear-gradient(90deg, #00dbde, #fc00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 2s ease-in-out infinite alternate;
+            
         }
 
         .subtext {
@@ -76,13 +76,7 @@ def run():
             font-size: 0.75rem;
         }
 
-        @keyframes glow {
-        from {
-            text-shadow: 0 0 5px #9d4edd, 0 0 10px #c77dff;
-        }
-        to {
-            text-shadow: 0 0 12px #e0aaff, 0 0 4px #b5cb99;
-        }
+        
         }
         </style>
     """, unsafe_allow_html=True)
