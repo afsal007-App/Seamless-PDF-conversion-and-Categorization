@@ -13,13 +13,11 @@ import app as categorizer_app
 # Custom Styling
 st.markdown("""
     <style>
-    /* Base page background */
     body {
         background: linear-gradient(135deg, #1f1c2c, #928DAB);
         color: #ffffff;
     }
 
-    /* Main container styling */
     .main {
         background-color: rgba(255, 255, 255, 0.04) !important;
         backdrop-filter: blur(6px);
@@ -27,7 +25,6 @@ st.markdown("""
         padding: 2rem;
     }
 
-    /* Title Styling */
     .title {
         font-size: 2.5rem;
         font-weight: 900;
@@ -48,24 +45,28 @@ st.markdown("""
         }
     }
 
-    /* Tabs container cleanup */
+    /* Tabs: same size, cleaner UI */
     .stTabs [data-baseweb="tab-list"] {
-        border: none;
-        background-color: transparent;
-        gap: 8px;
+        display: flex;
         justify-content: center;
-        padding-bottom: 0;
+        gap: 12px;
+        background: transparent;
+        border: none;
+        margin-bottom: 1rem;
     }
 
     .stTabs [data-baseweb="tab"] {
+        flex: 1;
+        text-align: center;
         font-size: 1rem;
         font-weight: 600;
-        color: #bbbbbb;
-        padding: 0.5rem 1.2rem;
+        padding: 0.75rem 1rem;
         background-color: rgba(255, 255, 255, 0.07);
+        color: #bbbbbb;
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
         transition: all 0.3s ease;
+        max-width: 200px;
     }
 
     .stTabs [data-baseweb="tab"]:hover {
@@ -74,13 +75,11 @@ st.markdown("""
     }
 
     .stTabs [aria-selected="true"] {
-        color: #ffffff;
         background-color: #6a4c93;
+        color: #ffffff;
         font-weight: 700;
-        border-bottom: none;
     }
 
-    /* Remove weird bottom border */
     section[data-testid="stTabs"] > div:first-child {
         border-bottom: none !important;
     }
