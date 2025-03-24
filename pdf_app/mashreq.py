@@ -1,10 +1,7 @@
-# ✅ Updated Mashreq_Bank.py – Streamlit-compatible and returns DataFrame to App.py
-
 import PyPDF2
 import re
 import pandas as pd
 import streamlit as st
-
 
 def run():
     st.markdown(
@@ -34,6 +31,14 @@ def run():
     if not uploaded_files:
         st.info("📂 Please upload PDF files to begin.")
         return None
+
+    # ✅ Helper to extract number from filename for sorting
+    def extract_number(filename):
+        numbers = re.findall(r'\d+', filename)
+        return int(numbers[0]) if numbers else float('inf')
+
+    # ✅ Sort files numerically by filename
+    uploaded_files = sorted(uploaded_files, key=lambda x: extract_number(x.name))
 
     unwanted_phrases = [
         "Opening balance", "ﺍﻟﺘﺎﺭﻳﺦ", "ﺍﻟﻤﻌﺎﻣﻠﺔ", "ﺭﻗﻢ ﺍﻟﻤﺮﺟﻊ", "ﻗﻴﻮﺩ",
