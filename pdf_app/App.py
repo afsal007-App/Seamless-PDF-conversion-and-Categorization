@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from shared.core import save_converted_df
-from io import BytesIO
 
 # Import bank modules
 import Rak_Bank
@@ -24,7 +23,6 @@ def run():
         "🏤 ADCB Bank": adcb
     }
 
-    # UI Styling
     st.markdown("""
         <style>
         .title {
@@ -76,7 +74,6 @@ def run():
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
 
-            # ✅ Auto-push to Categorizer Tab
             st.toast("✅ PDF processed! Redirecting to Categorizer...", icon="🚀")
             st.session_state["converted_df_for_categorization"] = df
             st.session_state["active_tab"] = "Categorizer"
@@ -86,9 +83,15 @@ def run():
     
     # Reset Button
     if st.button("Reset"):
-        keys_to_clear = ["converted_df_for_categorization", "active_tab"]
+        keys_to_clear = [
+            "converted_df_for_categorization", 
+            "active_tab",
+            "uploaded_file"
+        ]
+        
         for key in keys_to_clear:
             if key in st.session_state:
                 del st.session_state[key]
-        st.session_state.clear()  # Ensure full reset
-        st.rerun()
+
+        st.experimental_rerun()  # Force a full refresh to clear the uploaded file and other states
+
