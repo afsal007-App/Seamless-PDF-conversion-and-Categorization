@@ -17,14 +17,15 @@ def run():
             background: linear-gradient(135deg, #141e30, #243b55);
             color: #e0e0e0; font-size: 12px;
         }
-        .center- .title {
-        font-size: 1.2rem;
-        font-weight: 800;
-        text-align: center;
-        margin-bottom: 1rem;
-        background: linear-gradient(90deg, #00dbde, #fc00ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        .center-title {
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            padding-top: 1rem;
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
         }
         .watermark {
             position: fixed; bottom: 5px; left: 0; right: 0;
