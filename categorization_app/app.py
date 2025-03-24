@@ -1,120 +1,140 @@
 import streamlit as st
 import pandas as pd
-import uuid
-import zipfile
+import re
 from io import BytesIO
-from shared.core import get_converted_file, load_master_file, categorize_statement
+import zipfile
+import uuid
 
-st.set_page_config(page_title="Categorization Bot", layout="wide")
+# ✅ Master categorization file URL
+MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl54tKvqlo65Ug/export?format=xlsx"
 
-# UI Setup
-st.markdown("""
-    <style>
-    body { background: linear-gradient(135deg, #141e30, #243b55); color: #e0e0e0; }
-    .center-title {
-        text-align: center;
-        font-size: 28px;
-        font-weight: 700;
-        color: #f1c40f;
-        margin-bottom: 10px;
-    }
-    .watermark {
-        position: fixed;
-        bottom: 5px;
-        left: 0; right: 0;
-        text-align: center;
-        font-size: 11px;
-        font-style: italic;
-        color: rgba(200, 200, 200, 0.7);
-        pointer-events: none;
-    }
-    </style>
-    <div class="center-title">🤖 Categorization Bot</div>
-    <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
-""", unsafe_allow_html=True)
+def run():
+    # 🎨 CSS & UI
+    st.set_page_config(page_title="Categorization Bot", layout="wide")
+    st.markdown("""
+        <style>
+        [data-testid="stToolbar"] { visibility: hidden !important; }
+        body {
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: #e0e0e0; font-size: 12px;
+        }
+        .center-title {
+            text-align: center; font-size: 28px; font-weight: 700;
+            margin-bottom: 15px; color: #f1c40f;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .watermark {
+            position: fixed; bottom: 5px; left: 0; right: 0;
+            text-align: center; font-size: 11px; font-style: italic;
+            color: rgba(200, 200, 200, 0.7); pointer-events: none;
+            animation: fadeIn 2s ease;
+        }
+        </style>
+        <h1 class="center-title">🤖 Categorization Bot</h1>
+        <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
+    """, unsafe_allow_html=True)
 
-# Session state
-if "uploader_key" not in st.session_state:
-    st.session_state["uploader_key"] = str(uuid.uuid4())
+    # ✅ Session state for reset
+    if "uploader_key" not in st.session_state:
+        st.session_state["uploader_key"] = str(uuid.uuid4())
 
-def reset_app():
-    st.session_state["uploader_key"] = str(uuid.uuid4())
-    st.rerun()
+    def reset_app():
+        st.session_state["uploader_key"] = str(uuid.uuid4())
+        st.rerun()
 
-# Reset button
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    if st.button("🔄 Reset"):
-        reset_app()
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("🔄 Reset"):
+            reset_app()
 
-# Check for auto-loaded converted file
-converted_file = get_converted_file()
-uploaded_files = []
+    # ✅ Utility functions
+    def clean_text(text):
+        return re.sub(r'\s+', ' ', str(text).lower().replace('–', '-').replace('—', '-')).strip()
 
-if converted_file:
-    st.success("✅ Auto-loaded the converted PDF file.")
-    uploaded_files = [converted_file]
-else:
+    def load_master_file():
+        try:
+            df = pd.read_excel(MASTER_SHEET_URL)
+            df['Key Word'] = df['Key Word'].astype(str).apply(clean_text)
+            return df
+        except Exception as e:
+            st.error(f"⚠️ Error loading master file: {e}")
+            return pd.DataFrame()
+
+    def find_description_column(columns):
+        possible = ['description', 'details', 'narration', 'particulars', 'transaction details', 'remarks']
+        return next((col for col in columns if any(name in col.lower() for name in possible)), None)
+
+    def categorize_description(description, master_df):
+        cleaned = clean_text(description)
+        for _, row in master_df.iterrows():
+            if row['Key Word'] and row['Key Word'] in cleaned:
+                return row['Category']
+        return 'Uncategorized'
+
+    def categorize_statement(statement_df, master_df, desc_col):
+        statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
+        return statement_df
+
+    # 📂 File Upload
     uploaded_files = st.file_uploader(
-        "📂 Upload Statement Files (CSV or Excel)",
-        type=["csv", "xlsx"],
+        "📂 Upload Statement Files (Excel or CSV)",
+        type=["xlsx", "csv"],
         accept_multiple_files=True,
         key=st.session_state["uploader_key"]
     )
 
-if uploaded_files:
-    try:
-        master_df = load_master_file()
-    except Exception as e:
-        st.error(f"⚠️ Error loading master file: {e}")
-        st.stop()
+    if uploaded_files:
+        with st.spinner('🚀 Loading master file...'):
+            master_df = load_master_file()
 
-    categorized_files = []
+        if master_df.empty:
+            st.error("⚠️ Could not load the master file.")
+        else:
+            categorized_files = []
+            st.markdown('## 📑 Uploaded Files Preview & Results')
 
-    for file in uploaded_files:
-        st.subheader(f"📄 {file.name}")
-        try:
-            if file.name.endswith(".csv"):
-                df = pd.read_csv(file)
-            else:
-                df = pd.read_excel(file)
-        except Exception as e:
-            st.error(f"❌ Error reading {file.name}: {e}")
-            continue
+            for file in uploaded_files:
+                st.subheader(f"📄 {file.name}")
+                try:
+                    statement_df = pd.read_excel(file)
+                except Exception:
+                    statement_df = pd.read_csv(file)
 
-        st.dataframe(df.head())
+                st.dataframe(statement_df.head(), use_container_width=True)
+                desc_col = find_description_column(statement_df.columns)
 
-        try:
-            categorized_df = categorize_statement(df, master_df)
-            st.success(f"✅ {file.name} categorized successfully!")
-            st.dataframe(categorized_df.head())
+                if desc_col:
+                    categorized = categorize_statement(statement_df, master_df, desc_col)
+                    st.success(f"✅ {file.name} categorized successfully!")
+                    st.dataframe(categorized.head(), use_container_width=True)
 
-            buffer = BytesIO()
-            categorized_df.to_csv(buffer, index=False)
-            buffer.seek(0)
-            categorized_files.append((file.name, buffer))
+                    buffer = BytesIO()
+                    categorized.to_excel(buffer, index=False)
+                    buffer.seek(0)
+                    categorized_files.append((file.name, buffer))
 
-            st.download_button(
-                label=f"📥 Download {file.name}",
-                data=buffer,
-                file_name=f"Categorized_{file.name.replace('.xlsx', '.csv')}",
-                mime="text/csv"
-            )
-        except Exception as e:
-            st.error(f"❌ Categorization failed: {e}")
+                    st.download_button(
+                        label=f"📥 Download {file.name}",
+                        data=buffer,
+                        file_name=f"Categorized_{file.name}",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+                else:
+                    st.error(f"⚠️ No description column found in {file.name}.")
 
-    if categorized_files:
-        zip_buffer = BytesIO()
-        with zipfile.ZipFile(zip_buffer, "w") as zipf:
-            for fname, data in categorized_files:
-                zipf.writestr(f"Categorized_{fname.replace('.xlsx', '.csv')}", data.getvalue())
-        zip_buffer.seek(0)
+            if categorized_files:
+                zip_buffer = BytesIO()
+                with zipfile.ZipFile(zip_buffer, "w") as zipf:
+                    for fname, data in categorized_files:
+                        zipf.writestr(f"Categorized_{fname}", data.getvalue())
+                zip_buffer.seek(0)
 
-        st.download_button(
-            label="📦 Download All Categorized Files as ZIP",
-            data=zip_buffer,
-            file_name="Categorized_Files.zip",
-            mime="application/zip"
-        )
-else:
-    st.info("👆 Upload a CSV or Excel file to begin.")
+                st.download_button(
+                    label="📦 Download All Categorized Files as ZIP",
+                    data=zip_buffer,
+                    file_name="Categorized_Files.zip",
+                    mime="application/zip"
+                )
+    else:
+        st.info("👆 Upload files to begin.")
