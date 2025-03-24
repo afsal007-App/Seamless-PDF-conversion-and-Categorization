@@ -76,25 +76,19 @@ def run():
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
 
-            # ✅ Auto-push to Categorizer Tab with smooth toast & JS redirect
+            # ✅ Auto-push to Categorizer Tab
             st.toast("✅ PDF processed! Redirecting to Categorizer...", icon="🚀")
             st.session_state["converted_df_for_categorization"] = df
             st.session_state["active_tab"] = "Categorizer"
-
-            st.markdown("""
-                <script>
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 500);
-                </script>
-            """, unsafe_allow_html=True)
 
         else:
             st.warning("⚠️ No valid data returned from the selected bank's parser.")
     
     # Reset Button
     if st.button("Reset"):
-        st.session_state.clear()
-        st.session_state.pop("converted_df_for_categorization", None)
-        st.session_state.pop("active_tab", None)
+        keys_to_clear = ["converted_df_for_categorization", "active_tab"]
+        for key in keys_to_clear:
+            if key in st.session_state:
+                del st.session_state[key]
+        st.session_state.clear()  # Ensure full reset
         st.rerun()
