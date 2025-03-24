@@ -1,7 +1,7 @@
 import streamlit as st
 import sys, os
 
-st.set_page_config(page_title="Integrated Bot", layout="centered")
+st.set_page_config(page_title="🤖 Integrated Bot", layout="centered")
 
 # Import the apps
 sys.path.append(os.path.abspath("pdf_app"))
