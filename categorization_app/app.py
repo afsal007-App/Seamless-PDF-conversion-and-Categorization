@@ -85,6 +85,7 @@ def run():
 
     categorized_files = []
 
+    # ✅ Check for the presence of the "converted_df_for_categorization" session state value
     if "converted_df_for_categorization" in st.session_state and st.session_state["converted_df_for_categorization"] is not None:
         st.subheader("📥 Categorize Data from PDF Conversion")
 
