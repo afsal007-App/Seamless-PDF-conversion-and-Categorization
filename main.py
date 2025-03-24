@@ -1,14 +1,15 @@
-import streamlit as st
 import sys, os
+import streamlit as st
 
 st.set_page_config(page_title="Integrated Bot", layout="centered")
 
-# Import the apps
+# Add folders to path
 sys.path.append(os.path.abspath("pdf_app"))
 sys.path.append(os.path.abspath("categorization_app"))
 
-import App as pdf_app
-import categorizer as categorizer_app
+# Import renamed module
+import App as pdf_app                      # From /pdf_app/App.py
+import categorizer as categorizer_app     # From /categorization_app/categorizer.py
 
 # Custom Styling
 st.markdown("""
