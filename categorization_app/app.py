@@ -50,12 +50,15 @@ def run():
 
     # ✅ Stable reset method using a flag
     def reset_app():
-        # Remove the session variables related to categorization
+        # Remove session variables related to categorization
         for key in ["converted_df_for_categorization", "uploader_key"]:
-            st.session_state.pop(key, None)  # Remove the session state variables
-        st.session_state["uploader_key"] = str(uuid.uuid4())  # Create a new key for the uploader
-        # Reset any other necessary session variables related to categorization
-        st.session_state["converted_df_for_categorization"] = None  # Set the key to None to clear data
+            if key in st.session_state:
+                del st.session_state[key]  # Using `del` to remove keys from session state
+        st.session_state["uploader_key"] = str(uuid.uuid4())  # Re-create the uploader key for a fresh start
+        st.session_state["converted_df_for_categorization"] = None  # Ensure this is cleared
+        
+        # Debugging print to check session state
+        print("Session state after reset:", st.session_state)
 
     # ✅ Utility functions
     def clean_text(text):
