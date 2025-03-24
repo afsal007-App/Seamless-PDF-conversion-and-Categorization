@@ -1,6 +1,8 @@
 import streamlit as st
+import pandas as pd
+from shared.core import save_converted_df
 
-# ==== Bank Modules ====
+# Import your specific bank modules
 import Rak_Bank
 import al_jazira_bank
 import emirates_islamic_bank
@@ -10,10 +12,9 @@ import adib_bank
 import mashreq
 import adcb
 
-# ==== Bank Mapping ====
+# Bank mapping
 bank_modules = {
     "🏦 RAK Bank": Rak_Bank,
-    #"🏛️ Al Jazira Bank - Coming soon": al_jazira_bank,
     "🏢 Emirates Islamic Bank": emirates_islamic_bank,
     "🏬 FAB Bank": fab_bank,
     "🏛️ WIO Bank": Wio_bank,
@@ -22,10 +23,8 @@ bank_modules = {
     "🏤 ADCB Bank": adcb
 }
 
-# ==== Page Config ====
 st.set_page_config(page_title="Bank PDF Extractor", layout="centered")
 
-# ==== CSS Styling ====
 st.markdown("""
     <style>
     .title {
@@ -45,7 +44,6 @@ st.markdown("""
         margin-top: -10px;
         margin-bottom: 30px;
     }
-    
     .dropdown-label {
         font-size: 1.2rem;
         font-weight: 600;
@@ -58,30 +56,25 @@ st.markdown("""
         margin: 40px 0;
     }
     @keyframes glow {
-        from {
-            text-shadow: 0 0 05px ##886dc7, 0 0 10px ##cdb4d4;
-        }
-        to {
-            text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99;
-        }
+        from { text-shadow: 0 0 5px #886dc7, 0 0 10px #cdb4d4; }
+        to { text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99; }
     }
     </style>
 """, unsafe_allow_html=True)
 
-# ==== Header ====
 st.markdown("<div class='title'>Bank Statement PDF Extractor</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data 📄 ➡️ 📊</div>", unsafe_allow_html=True)
 
-# ==== Glass Dropdown Section ====
-st.markdown('<div class="glass-card">', unsafe_allow_html=True)
 st.markdown('<div class="dropdown-label"> Select Your Bank</div>', unsafe_allow_html=True)
 selected_bank = st.selectbox("", list(bank_modules.keys()))
-st.markdown('</div>', unsafe_allow_html=True)
-
-# ==== Divider ====
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# ==== Launch Selected Bank Processor ====
 if selected_bank:
-    bank_modules[selected_bank].run()
-
+    df = bank_modules[selected_bank].run()  # Run returns a DataFrame
+    if isinstance(df, pd.DataFrame):
+        from shared.core import save_converted_df
+        save_converted_df(df)
+        st.success("✅ PDF converted and saved as CSV successfully!")
+        st.dataframe(df.head())
+    else:
+        st.warning("⚠️ No data returned from the selected bank's parser.")
