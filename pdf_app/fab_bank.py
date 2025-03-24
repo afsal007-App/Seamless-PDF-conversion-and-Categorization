@@ -136,7 +136,7 @@ def run():
         }
         .instructions-box h4 {
             margin-top: 0;
-            font-size: 10px;
+            font-size: 50px;
         }
         .instructions-box ul {
             padding-left: 1.2rem;
