@@ -8,7 +8,7 @@ sys.path.append(os.path.abspath("pdf_app"))
 sys.path.append(os.path.abspath("categorization_app"))
 
 import App as pdf_app
-import app as categorizer_app
+import categorizer as categorizer_app
 
 # Custom Styling
 st.markdown("""
