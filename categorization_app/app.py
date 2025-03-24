@@ -50,10 +50,11 @@ def run():
 
     # ✅ Stable reset method using a flag
     def reset_app():
+        # Remove the session variables related to categorization
         for key in ["converted_df_for_categorization", "uploader_key"]:
             st.session_state.pop(key, None)  # Remove the session state variables
         st.session_state["uploader_key"] = str(uuid.uuid4())  # Create a new key for the uploader
-        # Reset any other necessary session variables
+        # Reset any other necessary session variables related to categorization
         st.session_state["converted_df_for_categorization"] = None  # Set the key to None to clear data
 
     # ✅ Utility functions
@@ -188,8 +189,7 @@ def run():
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("🔄 Reset / Clear App"):
-            reset_app()
-            st.experimental_rerun()  # This will trigger a rerun after resetting the app state
+            reset_app()  # This clears the session state without triggering rerun
 
 # ✅ Run the app
 if __name__ == "__main__":
