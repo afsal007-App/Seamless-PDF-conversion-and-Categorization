@@ -45,7 +45,7 @@ def run():
 
     def reset_app():
         st.session_state["uploader_key"] = str(uuid.uuid4())
-        st.session_state["converted_df_for_categorization"] = None
+        st.session_state.pop("converted_df_for_categorization", None)
         st.rerun()
 
     # ✅ Utility functions
@@ -77,7 +77,7 @@ def run():
         return statement_df
 
     # ✅ If data is pushed from PDF conversion
-    if st.session_state.get("converted_df_for_categorization") is not None:
+    if "converted_df_for_categorization" in st.session_state:
         st.subheader("📥 Categorize Data from PDF Conversion")
 
         with st.spinner('🚀 Loading master file...'):
