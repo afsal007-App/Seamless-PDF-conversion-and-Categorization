@@ -1,5 +1,3 @@
-# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab)
-
 import streamlit as st
 import pandas as pd
 from shared.core import save_converted_df
@@ -70,6 +68,12 @@ def run():
     st.markdown('<div class="dropdown-label"> Select Your Bank</div>', unsafe_allow_html=True)
     selected_bank = st.selectbox("", list(bank_modules.keys()))
     st.markdown("<hr>", unsafe_allow_html=True)
+
+    # Add Reset Button
+    if st.button("Reset File"):
+        st.session_state["converted_df_for_categorization"] = None
+        st.session_state["active_tab"] = None
+        st.experimental_rerun()
 
     if selected_bank:
         df = bank_modules[selected_bank].run()
