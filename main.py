@@ -13,21 +13,21 @@ import app as categorizer_app
 # Custom Styling
 st.markdown("""
     <style>
-    /* Make main background transparent */
+    /* Base page background */
+    body {
+        background: linear-gradient(135deg, #1f1c2c, #928DAB);
+        color: #ffffff;
+    }
+
+    /* Main container styling */
     .main {
-        background-color: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(8px);
-        border-radius: 16px;
+        background-color: rgba(255, 255, 255, 0.04) !important;
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
         padding: 2rem;
     }
 
-    /* Adjust Streamlit default body background */
-    body {
-        background: linear-gradient(135deg, #1f1c2c, #928DAB) !important;
-        color: #f1f1f1 !important;
-    }
-
-    /* Main Title Styling */
+    /* Title Styling */
     .title {
         font-size: 2.5rem;
         font-weight: 900;
@@ -44,39 +44,45 @@ st.markdown("""
             text-shadow: 0 0 5px #9d4edd, 0 0 10px #c77dff;
         }
         to {
-            text-shadow: 0 0 15px #e0aaff, 0 0 5px #b5cb99;
+            text-shadow: 0 0 12px #e0aaff, 0 0 4px #b5cb99;
         }
     }
 
-    /* Tabs Styling */
+    /* Tabs container cleanup */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        border-bottom: 3px solid rgba(255, 255, 255, 0.2);
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 0.5rem 1rem;
-        border-radius: 8px 8px 0 0;
+        border: none;
+        background-color: transparent;
+        gap: 8px;
         justify-content: center;
+        padding-bottom: 0;
     }
 
     .stTabs [data-baseweb="tab"] {
         font-size: 1rem;
         font-weight: 600;
-        padding: 0.5rem 1rem;
-        color: #f0f0f0;
-        border: 2px solid transparent;
-        border-radius: 8px 8px 0 0;
+        color: #bbbbbb;
+        padding: 0.5rem 1.2rem;
+        background-color: rgba(255, 255, 255, 0.07);
+        border: none;
+        border-radius: 10px;
         transition: all 0.3s ease;
     }
 
     .stTabs [data-baseweb="tab"]:hover {
-        color: #ffffff;
         background-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
     }
 
     .stTabs [aria-selected="true"] {
         color: #ffffff;
-        background-color: rgba(255, 255, 255, 0.25);
-        border-bottom: 2px solid #e0aaff;
+        background-color: #6a4c93;
+        font-weight: 700;
+        border-bottom: none;
+    }
+
+    /* Remove weird bottom border */
+    section[data-testid="stTabs"] > div:first-child {
+        border-bottom: none !important;
     }
     </style>
 """, unsafe_allow_html=True)
