@@ -1,7 +1,7 @@
 import streamlit as st
 import sys, os
 
-# ✅ MUST BE FIRST!
+# ✅ Set page config first — before any UI or function call
 st.set_page_config(page_title="Financial Toolkit", layout="wide")
 
 st.title("📊 Financial Toolkit")
