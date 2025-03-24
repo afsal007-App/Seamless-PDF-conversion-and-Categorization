@@ -1,14 +1,14 @@
+# ✅ Updated Mashreq_Bank.py – Streamlit-compatible and returns DataFrame to App.py
+
 import PyPDF2
 import re
 import pandas as pd
-import os
 import streamlit as st
-from io import BytesIO
+
 
 def run():
-    #st.markdown("## 🏦 Bank PDF Processor")
     st.subheader("Bank PDF Processor")
-    st.markdown("Upload **FAB Bank PDF statements**")
+    st.markdown("Upload **Mashreq Bank PDF statements**")
 
     uploaded_files = st.file_uploader(
         "Upload PDF files",
@@ -19,7 +19,6 @@ def run():
 
     opening_balance_input = st.text_input("Enter Opening Balance (leave blank to auto-calculate)")
 
-    # === Parse and Validate Opening Balance ===
     try:
         opening_balance = float(opening_balance_input.replace(",", "")) if opening_balance_input else None
     except ValueError:
@@ -28,36 +27,22 @@ def run():
 
     if not uploaded_files:
         st.info("📂 Please upload PDF files to begin.")
-        return
+        return None
 
     unwanted_phrases = [
-        "Opening balance",
-    "ﺍﻟﺘﺎﺭﻳﺦ",
-    "ﺍﻟﻤﻌﺎﻣﻠﺔ",
-    "ﺭﻗﻢ ﺍﻟﻤﺮﺟﻊ",
-    "ﻗﻴﻮﺩ",
-    "ﻗﻴﻮﺩ ﺩﺍﺋﻨﻪ",
-    "ﺍﻟﺮﺻﻴﺪ",
-    "page",
-    "The items and balance shown",
-    "of the statement date",
-    "All charges, terms and conditions",
-    "Please note that for foreign currency",
-    "verified. Report any discrepancies",
-    "accurate.",
-    "indicative only",
-    "ﺍﻟﺮﺟﺎﺀ ﺍﻟﺘﺄﻛﺪ ﻣﻦ ﺻﺤﺔ ﺍﻟﻤﻌﺎﻣﻼﺕ ﻭﺍﻟﻤﺒﺎﻟﻎ ﺍﻟﻤﺒﻴﻨﺔ ﻏﻰ ﻫﺬﺍ ﺍﻟﻜﺸﻒ",
-    "Closing balance",
-     "8 of 8",
+        "Opening balance", "ﺍﻟﺘﺎﺭﻳﺦ", "ﺍﻟﻤﻌﺎﻣﻠﺔ", "ﺭﻗﻢ ﺍﻟﻤﺮﺟﻊ", "ﻗﻴﻮﺩ",
+        "ﻗﻴﻮﺩ ﺩﺍﺋﻨﻪ", "ﺍﻟﺮﺻﻴﺪ", "page", "The items and balance shown",
+        "of the statement date", "All charges, terms and conditions",
+        "Please note that for foreign currency", "verified. Report any discrepancies",
+        "accurate.", "indicative only",
+        "ﺍﻟﺮﺟﺎﺀ ﺍﻟﺘﺄﻛﺪ ﻣﻦ ﺻﺤﺔ ﺍﻟﻤﻌﺎﻣﻼﺕ ﻭﺍﻟﻤﺒﺎﻟﻎ ﺍﻟﻤﺒﻴﻨﺔ ﻏﻰ ﻫﺬﺍ ﺍﻟﻜﺸﻒ",
+        "Closing balance", "8 of 8"
     ]
 
     of_pattern = re.compile(r'\bof\s*\d+\b', re.IGNORECASE)
     date_pattern = re.compile(r'\b\d{4}-\d{2}-\d{2}(?=\D)', re.IGNORECASE)
     amount_pattern = re.compile(r'\b(?:\d{1,3}(?:,\d{3})*|\d+)\.\d{1,2}\b|\b0\b')
-    header_pattern = re.compile(
-        r'Date\s*Transaction\s*Reference\s*Number\s*Debit\s*Balance\s*Credit',
-        re.IGNORECASE
-    )
+    header_pattern = re.compile(r'Date\s*Transaction\s*Reference\s*Number\s*Debit\s*Balance\s*Credit', re.IGNORECASE)
 
     def extract_transactions(file):
         transactions = []
@@ -113,6 +98,8 @@ def run():
         return structured_data
 
     all_data = []
+    final_df = None
+
     for file in uploaded_files:
         st.info(f"📄 Processing: {file.name}")
         transactions = extract_transactions(file)
@@ -128,20 +115,26 @@ def run():
 
         df['Balance'] = df['Balance'].str.replace(",", "").astype(float)
         df['Amount'] = df['Balance'].diff()
-        df.loc[df.index[0], 'Amount'] = df.loc[df.index[0], 'Balance'] - opening_balance
+        if opening_balance is not None and not df.empty:
+            df.loc[df.index[0], 'Amount'] = df.loc[df.index[0], 'Balance'] - opening_balance
+
         df['Source_File'] = file.name
         all_data.append(df)
 
-    final_df = pd.concat(all_data, ignore_index=True)
-    final_df.reset_index(drop=True, inplace=True)
+    if all_data:
+        final_df = pd.concat(all_data, ignore_index=True)
+        final_df.reset_index(drop=True, inplace=True)
 
-    st.success("✅ All PDFs processed successfully!")
-    st.dataframe(final_df)
+        st.success("✅ All PDFs processed successfully!")
+        st.dataframe(final_df, use_container_width=True)
 
-    csv = final_df.to_csv(index=False).encode("utf-8")
-    st.download_button("⬇️ Download CSV", csv, "all_statements_combined.csv", "text/csv")
-    
+        csv = final_df.to_csv(index=False).encode("utf-8")
+        st.download_button("⬇️ Download CSV", csv, "all_statements_combined.csv", "text/csv")
+    else:
+        st.warning("⚠️ No valid transactions extracted from the PDFs.")
 
-# Only needed if you want this file to run standalone
+    return final_df
+
+# Standalone test
 if __name__ == "__main__":
     run()
