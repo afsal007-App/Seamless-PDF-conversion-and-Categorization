@@ -1,7 +1,8 @@
+# ✅ Updated ADCB_Bank.py – Streamlit-compatible and returns DataFrame to App.py
+
 import pdfplumber
 import pandas as pd
 import streamlit as st
-from io import BytesIO
 
 expected_headers = [
     "Posting Date", "Value Date", "Description", "Ref/Cheque No",
@@ -31,10 +32,10 @@ def extract_transactions_from_pdf(file):
                         if len(clean_row) >= max(header_index) + 1:
                             selected_row = [clean_row[i] for i in header_index]
                             all_data.append(selected_row)
+
     return all_data
 
 def run():
-    #st.markdown("Bank PDF Processor")
     st.subheader("Bank PDF Processor")
     st.markdown("Upload **ADCB Bank PDF statements**")
 
@@ -45,27 +46,33 @@ def run():
         label_visibility="collapsed"
     )
 
-    if not uploaded_files:
-        st.info("📂 Please upload one or more PDF files.")
-        return
-
     combined_data = []
+    final_df = None
 
-    for file in uploaded_files:
-        st.info(f"🔍 Processing: {file.name}")
-        transactions = extract_transactions_from_pdf(file)
-        combined_data.extend(transactions)
+    if uploaded_files:
+        for file in uploaded_files:
+            st.info(f"🔍 Processing: {file.name}")
+            transactions = extract_transactions_from_pdf(file)
+            combined_data.extend(transactions)
 
-    df = pd.DataFrame(combined_data, columns=expected_headers)
-    df.dropna(how='all', inplace=True)
-    df.reset_index(drop=True, inplace=True)
+        if combined_data:
+            df = pd.DataFrame(combined_data, columns=expected_headers)
+            df.dropna(how='all', inplace=True)
+            df.reset_index(drop=True, inplace=True)
 
-    st.success("✅ Extraction complete!")
-    st.dataframe(df)
+            st.success("✅ Extraction complete!")
+            st.dataframe(df, use_container_width=True)
 
-    csv = df.to_csv(index=False).encode("utf-8")
-    st.download_button("⬇️ Download CSV", csv, "adcb_transactions.csv", "text/csv")
+            csv = df.to_csv(index=False).encode("utf-8")
+            st.download_button("⬇️ Download CSV", csv, "adcb_transactions.csv", "text/csv")
 
-# For standalone run
+            # ✅ Return DataFrame to App.py
+            final_df = df
+        else:
+            st.warning("⚠️ No valid transactions found in uploaded files.")
+
+    return final_df
+
+# For standalone testing
 if __name__ == "__main__":
     run()
