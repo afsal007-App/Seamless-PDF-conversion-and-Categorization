@@ -54,20 +54,33 @@ def run():
         <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
     """, unsafe_allow_html=True)
 
+    # Check if we just performed a reset
+    just_reset = st.session_state.get("just_reset", False)
+    if just_reset:
+        # Clear the reset flag
+        st.session_state["just_reset"] = False
+        # Add a brief message to confirm reset
+        st.success("App has been reset successfully!")
+
     # Initialize session state for uploader key if not exists
     if "uploader_key" not in st.session_state:
         st.session_state["uploader_key"] = str(uuid.uuid4())
 
     # Enhanced reset function to clear session state
     def reset_app():
-        # List any keys to preserve (e.g., authentication keys); currently none
-        keys_to_keep = []
+        # First explicitly remove all session state variables
         for key in list(st.session_state.keys()):
-            if key not in keys_to_keep:
-                del st.session_state[key]
-        # Reinitialize necessary keys
+            del st.session_state[key]
+                
+        # Reinitialize fresh uploader key to force the file uploader to reset
         st.session_state["uploader_key"] = str(uuid.uuid4())
+        
+        # Explicitly set converted_df_for_categorization to None
         st.session_state["converted_df_for_categorization"] = None
+        
+        # Flag to indicate reset was performed
+        st.session_state["just_reset"] = True
+        
         # Force the app to rerun after clearing state
         st.rerun()
 
@@ -106,39 +119,41 @@ def run():
 
     categorized_files = []
 
-    # Handle pre-converted dataframe from session state, if present
-    if "converted_df_for_categorization" in st.session_state and st.session_state["converted_df_for_categorization"] is not None:
-        st.subheader("📥 Categorize Data from PDF Conversion")
+    # Skip processing if we just reset
+    if not just_reset:
+        # Handle pre-converted dataframe from session state, if present
+        if "converted_df_for_categorization" in st.session_state and st.session_state["converted_df_for_categorization"] is not None:
+            st.subheader("📥 Categorize Data from PDF Conversion")
 
-        with st.spinner('🚀 Loading master file...'):
-            master_df = load_master_file()
+            with st.spinner('🚀 Loading master file...'):
+                master_df = load_master_file()
 
-        if not master_df.empty:
-            statement_df = st.session_state["converted_df_for_categorization"]
-            st.dataframe(statement_df.head(), use_container_width=True)
-            desc_col = find_description_column(statement_df.columns)
+            if not master_df.empty:
+                statement_df = st.session_state["converted_df_for_categorization"]
+                st.dataframe(statement_df.head(), use_container_width=True)
+                desc_col = find_description_column(statement_df.columns)
 
-            if desc_col:
-                categorized = categorize_statement(statement_df, master_df, desc_col)
-                st.success("✅ Data categorized successfully!")
-                st.dataframe(categorized.head(), use_container_width=True)
+                if desc_col:
+                    categorized = categorize_statement(statement_df, master_df, desc_col)
+                    st.success("✅ Data categorized successfully!")
+                    st.dataframe(categorized.head(), use_container_width=True)
 
-                buffer = BytesIO()
-                categorized.to_excel(buffer, index=False)
-                buffer.seek(0)
+                    buffer = BytesIO()
+                    categorized.to_excel(buffer, index=False)
+                    buffer.seek(0)
 
-                categorized_files.append(("Categorized_PDF_Output.xlsx", buffer))
+                    categorized_files.append(("Categorized_PDF_Output.xlsx", buffer))
 
-                st.download_button(
-                    label="📥 Download Categorized Data",
-                    data=buffer,
-                    file_name="Categorized_PDF_Output.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
+                    st.download_button(
+                        label="📥 Download Categorized Data",
+                        data=buffer,
+                        file_name="Categorized_PDF_Output.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+                else:
+                    st.error("⚠️ No description column found for categorization.")
             else:
-                st.error("⚠️ No description column found for categorization.")
-        else:
-            st.error("⚠️ Master file could not be loaded.")
+                st.error("⚠️ Master file could not be loaded.")
 
     # Manual file uploader section
     st.markdown("---")
@@ -149,7 +164,8 @@ def run():
         key=st.session_state["uploader_key"]
     )
 
-    if uploaded_files:
+    # Skip processing if we just reset
+    if not just_reset and uploaded_files:
         with st.spinner('🚀 Loading master file...'):
             master_df = load_master_file()
 
@@ -201,7 +217,7 @@ def run():
             file_name="Categorized_Files.zip",
             mime="application/zip"
         )
-    elif not uploaded_files:
+    elif not uploaded_files and not just_reset:
         st.info("👆 Upload files to begin.")
 
     # Reset button to clear the app
@@ -210,7 +226,6 @@ def run():
     with col2:
         if st.button("🔄 Reset / Clear App"):
             reset_app()
-            st.success("App has been reset!")  # Brief feedback before rerun
 
 # Run the app
 if __name__ == "__main__":
