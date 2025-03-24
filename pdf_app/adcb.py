@@ -36,8 +36,19 @@ def extract_transactions_from_pdf(file):
     return all_data
 
 def run():
-    st.subheader("Bank PDF Processor")
-    
+    st.markdown(
+    """
+    <style>
+    .custom-title {
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
+    )
 
     uploaded_files = st.file_uploader(
         "Upload PDF files",
