@@ -92,4 +92,4 @@ def run():
             """, unsafe_allow_html=True)
 
         else:
-            st.warning()
+            st.warning("⚠️ No data returned from the selected bank's parser.")
