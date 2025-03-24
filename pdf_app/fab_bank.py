@@ -128,7 +128,7 @@ def run():
         <style>
         .instructions-box {
             padding: 1.2rem;
-            border-left: 6px solid #2c7be5;
+            border-left: 0px solid #2c7be5;
             border-radius: 10px;
             margin-top: 1.5rem;
             background-color: rgba(0, 0, 0, 0.0);
