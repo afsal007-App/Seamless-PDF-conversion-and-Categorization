@@ -95,4 +95,6 @@ def run():
     # Reset Button
     if st.button("Reset"):
         st.session_state.clear()
+        st.session_state.pop("converted_df_for_categorization", None)
+        st.session_state.pop("active_tab", None)
         st.rerun()
