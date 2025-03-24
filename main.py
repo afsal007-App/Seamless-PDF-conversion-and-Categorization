@@ -42,14 +42,7 @@ st.markdown("""
         
     }
 
-    @keyframes glow {
-        from {
-            text-shadow: 0 0 5px #9d4edd, 0 0 10px #c77dff;
-        }
-        to {
-            text-shadow: 0 0 12px #e0aaff, 0 0 4px #b5cb99;
-        }
-    }
+    
 
     /* Tabs: same size, cleaner UI */
     .stTabs [data-baseweb="tab-list"] {
