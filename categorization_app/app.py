@@ -10,7 +10,6 @@ MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl
 
 def run():
     # 🎨 CSS & UI
-    st.set_page_config(page_title="Categorization Bot", layout="wide")
     st.markdown("""
         <style>
         [data-testid="stToolbar"] { visibility: hidden !important; }
