@@ -39,6 +39,15 @@ def run():
             padding: 10px 24px;
             border-radius: 8px;
             font-size: 16px;
+            
+        }
+
+         @keyframes glow {
+        from {
+            text-shadow: 0 0 05px ##886dc7, 0 0 10px ##cdb4d4;
+        }
+        to {
+            text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99;
         }
         </style>
         <h1 class="center-title">Categorization Bot</h1>
