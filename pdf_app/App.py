@@ -1,4 +1,4 @@
-# ✅ Updated App.py (PDF to CSV Converter with Auto Push to Categorizer Tab)
+# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab)
 
 import streamlit as st
 import pandas as pd
@@ -78,11 +78,18 @@ def run():
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
 
-            # ✅ Auto-push to Categorizer Tab with toast
+            # ✅ Auto-push to Categorizer Tab with smooth toast & JS redirect
             st.toast("✅ PDF processed! Redirecting to Categorizer...", icon="🚀")
             st.session_state["converted_df_for_categorization"] = df
             st.session_state["active_tab"] = "Categorizer"
-            st.rerun()
+
+            st.markdown("""
+                <script>
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                </script>
+            """, unsafe_allow_html=True)
 
         else:
             st.warning("⚠️ No data returned from the selected bank's parser.")
