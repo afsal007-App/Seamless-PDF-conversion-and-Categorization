@@ -11,46 +11,101 @@ MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1I_Fz3slHP1mnfsKKgAFl
 
 def run():
     # Custom CSS for styling the app
-    st.markdown("""
+     st.markdown("""
         <style>
         [data-testid="stToolbar"] { visibility: hidden !important; }
+
         body {
             background: linear-gradient(135deg, #141e30, #243b55);
-            color: #e0e0e0; font-size: 12px;
+            color: #e0e0e0;
+            font-size: 12px;
         }
+
+        /* Title */
         .center-title {
-            font-size: 3rem;
-            font-weight: 900;
+            font-size: 2rem;
+            font-weight: 800;
             text-align: center;
-            padding-top: 1rem;
+            padding-top: 0.5rem;
             background: linear-gradient(90deg, #00dbde, #fc00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 2s ease-in-out infinite alternate;
         }
+
+        /* Watermark */
         .watermark {
-            position: fixed; bottom: 5px; left: 0; right: 0;
-            text-align: center; font-size: 11px; font-style: italic;
-            color: rgba(200, 200, 200, 0.7); pointer-events: none;
+            position: fixed;
+            bottom: 4px;
+            left: 0; right: 0;
+            text-align: center;
+            font-size: 11px;
+            font-style: italic;
+            color: rgba(200, 200, 200, 0.6);
+            pointer-events: none;
             animation: fadeIn 2s ease;
         }
+
+        /* Button Styling */
         div.stButton > button {
-            background-color: #444 !important;
-            color: white !important;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            
+            background-color: #3b3b3b !important;
+            color: #ffffff !important;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
-         @keyframes glow {
-        from {
-            text-shadow: 0 0 05px ##886dc7, 0 0 10px ##cdb4d4;
+        /* Headings / Subheaders */
+        h1, h2, h3, h4 {
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #f0f0f0 !important;
         }
-        to {
-            text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99;
+
+        /* Streamlit alert (success/warning) tweaks */
+        .stAlert {
+            font-size: 0.85rem;
+        }
+
+        /* Upload box + file text */
+        .uploadedFileName, .stFileUploader label {
+            font-size: 0.85rem !important;
+        }
+
+        /* Download buttons */
+        .stDownloadButton > button {
+            font-size: 0.8rem !important;
+            padding: 6px 16px !important;
+            border-radius: 6px;
+        }
+
+        /* DataFrame styling */
+        .stDataFrame {
+            font-size: 0.75rem;
+        }
+
+        /* General margins cleanup */
+        .block-container {
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        /* Glow effect for title */
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #886dc7, 0 0 10px #cdb4d4; }
+            to   { text-shadow: 0 0 12px #EBE3D5, 0 0 2px #B5CB99; }
+        }
+
+        /* Fade in effect */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
         }
         </style>
+
         <h1 class="center-title">Categorization Bot</h1>
         <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
     """, unsafe_allow_html=True)
