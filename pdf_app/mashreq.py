@@ -7,15 +7,21 @@ import streamlit as st
 
 
 def run():
-    st.subheader("Bank PDF Processor")
-    st.markdown("Upload **Mashreq Bank PDF statements**")
-
-    uploaded_files = st.file_uploader(
-        "Upload PDF files",
-        type=["pdf"],
-        accept_multiple_files=True,
-        label_visibility="collapsed"
+    st.markdown(
+    """
+    <style>
+    .custom-title {
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
     )
+
+    uploaded_files = st.file_uploader("Upload one or more Mashreq Bank PDF statements", type="pdf", accept_multiple_files=True)
 
     opening_balance_input = st.text_input("Enter Opening Balance (leave blank to auto-calculate)")
 
