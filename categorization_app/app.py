@@ -81,6 +81,8 @@ def run():
         statement_df['Categorization'] = statement_df[desc_col].apply(lambda x: categorize_description(x, master_df))
         return statement_df
 
+    categorized_files = []  # <- collect categorized outputs for ZIP
+
     # ✅ If data is pushed from PDF conversion
     if "converted_df_for_categorization" in st.session_state:
         st.subheader("📥 Categorize Data from PDF Conversion")
@@ -101,6 +103,8 @@ def run():
                 buffer = BytesIO()
                 categorized.to_excel(buffer, index=False)
                 buffer.seek(0)
+
+                categorized_files.append(("Categorized_PDF_Output.xlsx", buffer))
 
                 st.download_button(
                     label="📥 Download Categorized Data",
@@ -129,7 +133,6 @@ def run():
         if master_df.empty:
             st.error("⚠️ Could not load the master file.")
         else:
-            categorized_files = []
             st.markdown('## 📑 Uploaded Files Preview & Results')
 
             for file in uploaded_files:
@@ -150,7 +153,7 @@ def run():
                     buffer = BytesIO()
                     categorized.to_excel(buffer, index=False)
                     buffer.seek(0)
-                    categorized_files.append((file.name, buffer))
+                    categorized_files.append((f"Categorized_{file.name}", buffer))
 
                     st.download_button(
                         label=f"📥 Download {file.name}",
@@ -161,20 +164,20 @@ def run():
                 else:
                     st.error(f"⚠️ No description column found in {file.name}.")
 
-            if categorized_files:
-                zip_buffer = BytesIO()
-                with zipfile.ZipFile(zip_buffer, "w") as zipf:
-                    for fname, data in categorized_files:
-                        zipf.writestr(f"Categorized_{fname}", data.getvalue())
-                zip_buffer.seek(0)
+    if categorized_files:
+        zip_buffer = BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zipf:
+            for fname, data in categorized_files:
+                zipf.writestr(fname, data.getvalue())
+        zip_buffer.seek(0)
 
-                st.download_button(
-                    label="📦 Download All Categorized Files as ZIP",
-                    data=zip_buffer,
-                    file_name="Categorized_Files.zip",
-                    mime="application/zip"
-                )
-    else:
+        st.download_button(
+            label="📦 Download All Categorized Files as ZIP",
+            data=zip_buffer,
+            file_name="Categorized_Files.zip",
+            mime="application/zip"
+        )
+    elif not uploaded_files:
         st.info("👆 Upload files to begin.")
 
     # ✅ Always-visible standalone Reset button
