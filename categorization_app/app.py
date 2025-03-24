@@ -68,7 +68,7 @@ def run():
                 color: #155724; 
                 border-radius: 0.25rem; 
                 margin-bottom: 1rem;
-                animation: fadeOut 1s ease-in 3s forwards;">
+                animation: fadeOut 1s ease-in 1s forwards;">
                 ✅ App has been reset successfully!
             </div>
             <style>
