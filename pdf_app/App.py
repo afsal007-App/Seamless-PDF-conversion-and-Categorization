@@ -13,7 +13,6 @@ import mashreq
 import adcb
 
 def run():
-    # Bank mapping
     bank_modules = {
         "🏦 RAK Bank": Rak_Bank,
         "🏢 Emirates Islamic Bank": emirates_islamic_bank,
@@ -69,10 +68,15 @@ def run():
     st.markdown("<hr>", unsafe_allow_html=True)
 
     if selected_bank:
-        df = bank_modules[selected_bank].run()  # Run returns a DataFrame
+        df = bank_modules[selected_bank].run()
         if isinstance(df, pd.DataFrame):
             save_converted_df(df)
+            st.session_state["converted_df_for_categorization"] = df
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
+
+            if st.button("🚀 Push to Categorizer"):
+                st.session_state["active_tab"] = "Categorizer"
+                st.rerun()
         else:
             st.warning("⚠️ No data returned from the selected bank's parser.")
