@@ -1,16 +1,19 @@
 import streamlit as st
-import os
+import sys, os
 
-st.set_page_config(page_title="Financial Toolkit", layout="centered")
-
+st.set_page_config(page_title="Financial Toolkit", layout="wide")
 st.title("📊 Financial Toolkit")
 
-option = st.selectbox("Choose a tool", ["🔄 PDF to CSV Converter", "🧠 Categorize Transactions"])
+tab1, tab2 = st.tabs(["🔄 PDF to CSV Converter", "🧠 Categorizer"])
 
-if option == "🔄 PDF to CSV Converter":
-    st.markdown("Run `pdf_app/app.py` directly or deploy it as a Streamlit app.")
-    st.code("streamlit run pdf_app/app.py")
+# --- Tab 1: PDF Converter ---
+with tab1:
+    sys.path.append(os.path.abspath("pdf_app"))
+    import app as pdf_app
+    pdf_app.run()
 
-elif option == "🧠 Categorize Transactions":
-    st.markdown("Run `categorization_app/app.py` directly or deploy it as a Streamlit app.")
-    st.code("streamlit run categorization_app/app.py")
+# --- Tab 2: Categorizer ---
+with tab2:
+    sys.path.append(os.path.abspath("categorization_app"))
+    import app as categorizer_app
+    categorizer_app.run()
