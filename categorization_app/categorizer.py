@@ -144,7 +144,7 @@ def run():
         st.session_state["uploader_key"] = str(uuid.uuid4())
 
     # Enhanced reset function to clear session state
-    def reset_app():
+    def reset_categorizer():
         # First explicitly remove all session state variables
         for key in list(st.session_state.keys()):
             del st.session_state[key]
@@ -302,7 +302,7 @@ def run():
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("🔄 Reset / Clear App"):
-            reset_app()
+            reset_categorizer()
 
 # Run the app
 if __name__ == "__main__":
