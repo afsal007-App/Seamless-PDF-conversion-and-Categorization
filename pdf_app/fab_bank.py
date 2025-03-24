@@ -128,16 +128,16 @@ def run():
         <style>
         .instructions-box {
             padding: 1.2rem;
-            border-left: 0px solid #2c7be5;
+            border-left: 6px solid #2c7be5;
             border-radius: 10px;
             margin-top: 1.5rem;
             background-color: rgba(0, 0, 0, 0.0);
             color: var(--text-color);
         }
-        .instructions-box h4 {
-            margin-top: 0;
-            font-size: 8px;
+        .instructions-title {
+            font-size: 15px;
             font-weight: 600;
+            margin-bottom: 0.5rem;
         }
         .instructions-box ul {
             padding-left: 1.2rem;
@@ -145,10 +145,11 @@ def run():
         </style>
 
         <div class="instructions-box">
-            <h4>📄 Instructions for Uploading PDFs:</h4>
+            <div class="instructions-title">📄 Instructions for Uploading PDFs:</div>
             <ul>
                 <li>Upload one or more <strong>FAB Bank PDF statements</strong>.</li>
                 <li>Rename files in order (e.g., <code>Statement1.pdf</code>, <code>Statement2.pdf</code>) for proper sorting.</li>
+               
                 </ul>
         </div>
         """,
