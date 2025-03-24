@@ -78,11 +78,12 @@ def run():
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
 
-            # ➕ Push raw output to Categorizer tab
+            # ✅ Push to Categorizer Tab
             st.session_state["converted_df_for_categorization"] = df
 
             if st.button("🚀 Push to Categorizer Tab"):
                 st.session_state["active_tab"] = "Categorizer"
                 st.rerun()
+
         else:
             st.warning("⚠️ No data returned from the selected bank's parser.")
