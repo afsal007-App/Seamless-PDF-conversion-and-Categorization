@@ -34,7 +34,7 @@ def run():
             animation: fadeIn 2s ease;
         }
         </style>
-        <h1 class="center-title">"🤖" Categorization Bot</h1>
+        <h1 class="center-title"> Categorization Bot</h1>
         <div class="watermark">© 2025 Afsal. All Rights Reserved.</div>
     """, unsafe_allow_html=True)
 
