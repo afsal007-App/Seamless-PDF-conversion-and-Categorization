@@ -1,5 +1,3 @@
-# ✅ Updated App.py (PDF to CSV Converter with Smooth Auto Push to Categorizer Tab)
-
 import streamlit as st
 import pandas as pd
 from shared.core import save_converted_df
@@ -65,7 +63,7 @@ def run():
     """, unsafe_allow_html=True)
 
     st.markdown("<div class='title'>Bank Statement PDF Extractor</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data \U0001F4C4 ➡️ \U0001F4C8</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtext'>Convert your bank PDFs into clean, usable data \U0001F4C4 ➞ \U0001F4C8</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="dropdown-label"> Select Your Bank</div>', unsafe_allow_html=True)
     selected_bank = st.selectbox("", list(bank_modules.keys()))
@@ -73,7 +71,7 @@ def run():
 
     if selected_bank:
         df = bank_modules[selected_bank].run()
-        if isinstance(df, pd.DataFrame):
+        if isinstance(df, pd.DataFrame) and not df.empty:
             save_converted_df(df)
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(df.head())
@@ -92,4 +90,9 @@ def run():
             """, unsafe_allow_html=True)
 
         else:
-            st.warning("⚠️ No data returned from the selected bank's parser.")
+            st.warning("⚠️ No valid data returned from the selected bank's parser.")
+    
+    # Reset Button
+    if st.button("Reset"):
+        st.session_state.clear()
+        st.experimental_rerun()
