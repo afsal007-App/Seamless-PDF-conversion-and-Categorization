@@ -17,6 +17,12 @@ st.markdown("""
         background: linear-gradient(135deg, #1f1c2c, #928DAB);
         color: #ffffff;
     }
+    {
+    padding-top: 2rem !important;
+    }
+    .block-container {
+    padding-top: 3rem !important;
+    }
 
     .main {
         background-color: rgba(255, 255, 255, 0.04) !important;
