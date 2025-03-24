@@ -134,9 +134,9 @@ def run():
             background-color: rgba(0, 0, 0, 0.0);
             color: var(--text-color);
         }
-        .instructions-box h3 {
+        .instructions-box h4 {
             margin-top: 0;
-            font-size: 12px;
+            font-size: 10px;
         }
         .instructions-box ul {
             padding-left: 1.2rem;
@@ -144,7 +144,7 @@ def run():
         </style>
 
         <div class="instructions-box">
-            <h3>📄 Instructions for Uploading PDFs:</h3>
+            <h4>📄 Instructions for Uploading PDFs:</h4>
             <ul>
                 <li>Upload one or more <strong>FAB Bank PDF statements</strong>.</li>
                 <li>Rename files in order (e.g., <code>Statement1.pdf</code>, <code>Statement2.pdf</code>) for proper sorting.</li>
