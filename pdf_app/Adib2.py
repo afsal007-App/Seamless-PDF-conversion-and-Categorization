@@ -30,46 +30,39 @@ def extract_transaction_table(pdf_path, password=None):
     return final_df
 
 def run():
-    st.markdown("""
-    <style>
-    .custom-title {
-        font-size: 18px !important;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        }
-    </style>
-    <div class="custom-title">Bank PDF Processor</div>
-    """,
-    unsafe_allow_html=True
-    )
-    uploaded_files = st.file_uploader("Upload one or more RAK Bank PDF files", type="pdf", accept_multiple_files=True)
+    st.title("Bank PDF Processor")
 
+    uploaded_files = st.file_uploader("Upload one or more Bank PDF files", type="pdf", accept_multiple_files=True)
     password = st.text_input("Enter PDF password (leave blank if not required)", type="password")
 
-    combined_df = pd.DataFrame()
+    combined_df = pd.DataFrame()  # Initialize empty
 
-    if uploaded_files and st.button("Extract Transactions"):
-        for uploaded_file in uploaded_files:
-            try:
-                with open(f"temp_{uploaded_file.name}", "wb") as f:
-                    f.write(uploaded_file.read())
+    if uploaded_files:
+        if st.button("Extract Transactions"):
+            for uploaded_file in uploaded_files:
+                try:
+                    # Save uploaded file temporarily
+                    temp_path = f"temp_{uploaded_file.name}"
+                    with open(temp_path, "wb") as f:
+                        f.write(uploaded_file.read())
 
-                df = extract_transaction_table(f"temp_{uploaded_file.name}", password=password or None)
-                df["Source File"] = uploaded_file.name
-                combined_df = pd.concat([combined_df, df], ignore_index=True)
+                    # Extract data
+                    df = extract_transaction_table(temp_path, password=password or None)
+                    df["Source File"] = uploaded_file.name
+                    combined_df = pd.concat([combined_df, df], ignore_index=True)
 
-                os.remove(f"temp_{uploaded_file.name}")
+                    os.remove(temp_path)  # Clean up
 
-            except Exception as e:
-                st.error(f"Failed to extract from {uploaded_file.name}: {e}")
+                except Exception as e:
+                    st.error(f"Failed to process {uploaded_file.name}: {e}")
 
-        if not combined_df.empty:
-            st.success("Extraction complete!")
-            st.dataframe(combined_df)
+            if not combined_df.empty:
+                st.success("✅ PDF converted and saved as CSV successfully!")
+                st.dataframe(combined_df)
 
-            csv = combined_df.to_csv(index=False).encode('utf-8')
-            st.download_button("Download CSV", data=csv, file_name="combined_transactions.csv", mime="text/csv")
-        else:
-            st.warning("No data extracted. Please check your files and password.")
-    
-    return combined_df  # ✅ This allows integration with Main.py
+                csv = combined_df.to_csv(index=False).encode('utf-8')
+                st.download_button("Download CSV", csv, "combined_transactions.csv", "text/csv")
+            else:
+                st.warning("⚠️ No valid transaction data extracted. Please check your files or password.")
+
+    return combined_df  # Only returns if file was uploaded and processed
