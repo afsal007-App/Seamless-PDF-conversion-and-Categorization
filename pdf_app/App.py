@@ -23,7 +23,7 @@ def run():
         "🏬 FAB Bank": fab_bank,
         "🏛️ WIO Bank": Wio_bank,
         "🏚️ ADIB Bank": adib_bank,
-        "🏚️ ADCB Bank - Format II": Adib2,
+        "🏚️ ADIB Bank - Format II": Adib2,
         "🏠 Mashreq Neo Bank": mashreq,
         "🏤 ADCB Bank": adcb
         
