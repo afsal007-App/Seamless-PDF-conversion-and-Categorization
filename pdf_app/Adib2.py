@@ -30,25 +30,15 @@ def extract_transaction_table(pdf_path, password=None):
     return final_df
 
 def run():
-    st.markdown("""
-    <style>
-    .custom-title {
-        font-size: 18px !important;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        }
-    </style>
-    <div class="custom-title">Bank PDF Processor</div>
-    """,
-    unsafe_allow_html=True
-    )
-    uploaded_files = st.file_uploader("Upload one or more RAK Bank PDF files", type="pdf", accept_multiple_files=True)
+    st.title("Bank Statement Parser")
+
+    uploaded_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
 
     password = st.text_input("Enter PDF password (leave blank if not required)", type="password")
 
-    if uploaded_files and st.button("Extract Transactions"):
-        combined_df = pd.DataFrame()
+    combined_df = pd.DataFrame()
 
+    if uploaded_files and st.button("Extract Transactions"):
         for uploaded_file in uploaded_files:
             try:
                 with open(f"temp_{uploaded_file.name}", "wb") as f:
@@ -71,4 +61,5 @@ def run():
             st.download_button("Download CSV", data=csv, file_name="combined_transactions.csv", mime="text/csv")
         else:
             st.warning("No data extracted. Please check your files and password.")
-
+    
+    return combined_df  # ✅ This allows integration with Main.py
