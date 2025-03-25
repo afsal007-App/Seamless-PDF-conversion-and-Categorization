@@ -4,10 +4,10 @@ import pandas as pd
 import re
 import os
 
-def extract_transaction_table(pdf_path, password=None):
+def extract_transaction_table(pdf_path):
     all_data = []
 
-    with pdfplumber.open(pdf_path, password=password) as pdf:
+    with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             tables = page.extract_tables()
             for table in tables:
@@ -39,24 +39,23 @@ def run():
         margin-bottom: 0.5rem;
         }
     </style>
-    <div class="custom-title">Bank PDF Processor</div>
+    <div class="custom-title">RAK Bank PDF Processor</div>
     """,
     unsafe_allow_html=True
     )
-    uploaded_files = st.file_uploader("Upload one or more RAK Bank PDF files", type="pdf", accept_multiple_files=True)
-    password = st.text_input("Enter PDF password (leave blank if not required)", type="password")
+
+    uploaded_files = st.file_uploader("Upload RAK Bank PDF file(s)", type="pdf", accept_multiple_files=True)
 
     combined_df = pd.DataFrame()
-    extraction_success = False  # ✅ NEW FLAG
 
-    if uploaded_files and st.button("Extract Transactions"):
+    if uploaded_files:
         for uploaded_file in uploaded_files:
             try:
                 temp_path = f"temp_{uploaded_file.name}"
                 with open(temp_path, "wb") as f:
                     f.write(uploaded_file.read())
 
-                df = extract_transaction_table(temp_path, password=password or None)
+                df = extract_transaction_table(temp_path)
                 df["Source File"] = uploaded_file.name
                 combined_df = pd.concat([combined_df, df], ignore_index=True)
 
@@ -65,13 +64,11 @@ def run():
                 st.error(f"Failed to process {uploaded_file.name}: {e}")
 
         if not combined_df.empty:
-            extraction_success = True
             st.success("✅ PDF converted and saved as CSV successfully!")
             st.dataframe(combined_df)
             csv = combined_df.to_csv(index=False).encode('utf-8')
             st.download_button("Download CSV", csv, "combined_transactions.csv", "text/csv")
         else:
-            st.warning("⚠️ No valid transaction data extracted. Please check your files or password.")
+            st.warning("⚠️ No valid transaction data extracted. Please check your files.")
 
-    return combined_df if extraction_success else pd.DataFrame()
-
+    return combined_df
