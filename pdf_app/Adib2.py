@@ -30,9 +30,19 @@ def extract_transaction_table(pdf_path, password=None):
     return final_df
 
 def run():
-    st.title("Bank Statement Parser")
-
-    uploaded_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
+    st.markdown("""
+    <style>
+    .custom-title {
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
+    )
+    uploaded_files = st.file_uploader("Upload one or more RAK Bank PDF files", type="pdf", accept_multiple_files=True)
 
     password = st.text_input("Enter PDF password (leave blank if not required)", type="password")
 
