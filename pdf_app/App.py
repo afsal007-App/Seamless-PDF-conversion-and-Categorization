@@ -14,6 +14,7 @@ import Wio_bank
 import adib_bank
 import mashreq
 import adcb
+import Adib2
 
 def run():
     bank_modules = {
@@ -22,8 +23,10 @@ def run():
         "🏬 FAB Bank": fab_bank,
         "🏛️ WIO Bank": Wio_bank,
         "🏚️ ADIB Bank": adib_bank,
+        "🏚️ ADCB Bank - Format II": Adib2,
         "🏠 Mashreq Neo Bank": mashreq,
         "🏤 ADCB Bank": adcb
+        
     }
 
     # UI Styling
