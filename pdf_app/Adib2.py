@@ -3,17 +3,19 @@ import pdfplumber
 import pandas as pd
 import re
 import os
+from io import BytesIO
 
-def extract_transaction_table(pdf_path):
+def extract_transaction_table(file):
     all_data = []
 
-    with pdfplumber.open(pdf_path) as pdf:
+    with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
             tables = page.extract_tables()
+
             for table in tables:
                 for row in table:
                     if row and len(row) >= 5:
-                        all_data.append(row[:5])
+                        all_data.append(row[:5])  # First 5 columns only
 
     column_headers = ["Date", "Description", "Debit", "Credit", "Balance"]
     df = pd.DataFrame(all_data, columns=column_headers)
@@ -29,7 +31,8 @@ def extract_transaction_table(pdf_path):
     final_df = final_df.reset_index(drop=True)
     return final_df
 
-def run():
+# ------------------------- STREAMLIT APP -------------------------- #
+def app():
     st.markdown(
         """
         <style>
@@ -39,39 +42,31 @@ def run():
             margin-bottom: 0.5rem;
         }
         </style>
-        <div class="custom-title">RAK Bank PDF Processor</div>
+        <div class="custom-title">Bank Statement PDF Parser</div>
         """,
         unsafe_allow_html=True
     )
 
-    uploaded_files = st.file_uploader("Upload RAK Bank PDF file(s)", type="pdf", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload one or more bank PDFs", type=["pdf"], accept_multiple_files=True)
 
-    if not uploaded_files:
-        st.info("Please upload at least one RAK Bank PDF file to begin.")
-        return pd.DataFrame()
+    final_df = None
 
-    combined_df = pd.DataFrame()
+    if uploaded_files:
+        combined_df = pd.DataFrame()
 
-    for uploaded_file in uploaded_files:
-        try:
-            temp_path = f"temp_{uploaded_file.name}"
-            with open(temp_path, "wb") as f:
-                f.write(uploaded_file.read())
-
-            df = extract_transaction_table(temp_path)
-            df["Source File"] = uploaded_file.name
+        for file in uploaded_files:
+            st.info(f"Processing: {file.name}")
+            df = extract_transaction_table(file)
+            df["Source File"] = file.name
             combined_df = pd.concat([combined_df, df], ignore_index=True)
 
-            os.remove(temp_path)
-        except Exception as e:
-            st.error(f"Failed to process {uploaded_file.name}: {e}")
+        if not combined_df.empty:
+            st.success("✅ Transactions Extracted")
+            st.dataframe(combined_df, use_container_width=True)
 
-    if not combined_df.empty and len(combined_df.dropna(how='all')) > 0:
-        st.success("✅ PDF converted and saved as CSV successfully!")
-        st.dataframe(combined_df)
-        csv = combined_df.to_csv(index=False).encode('utf-8')
-        st.download_button("Download CSV", csv, "combined_transactions.csv", "text/csv")
-    else:
-        st.warning("⚠️ No valid transaction data extracted. Please check your files.")
+            csv = combined_df.to_csv(index=False).encode('utf-8')
+            st.download_button("📥 Download CSV", csv, "transactions.csv", "text/csv")
 
-    return combined_df
+            final_df = combined_df
+
+    return final_df
