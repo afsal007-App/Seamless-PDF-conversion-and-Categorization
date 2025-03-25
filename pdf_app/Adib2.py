@@ -32,7 +32,7 @@ def extract_transaction_table(file):
     return final_df
 
 # ------------------------- STREAMLIT APP -------------------------- #
-def app():
+def run():
     st.markdown(
         """
         <style>
