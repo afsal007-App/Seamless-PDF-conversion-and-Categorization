@@ -110,7 +110,8 @@ def process_uploaded_pdfs(uploaded_files):
 # ---------- Streamlit App Entry Point ----------
 def run():
     st.markdown(
-        """<style>
+        """
+        <style>
         .custom-title {
         font-size: 18px !important;
         font-weight: 600;
