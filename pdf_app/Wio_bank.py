@@ -107,8 +107,8 @@ def process_uploaded_pdfs(uploaded_files):
 
     return pd.DataFrame(all_transactions)
 
-# ---------- Streamlit App ----------
-def app():
+# ---------- Streamlit App Entry Point ----------
+def run():
     st.header("🔍 Bank PDF Extractor")
 
     uploaded_files = st.file_uploader("Upload one or more bank PDFs", type=["pdf"], accept_multiple_files=True)
