@@ -109,9 +109,18 @@ def process_uploaded_pdfs(uploaded_files):
 
 # ---------- Streamlit App Entry Point ----------
 def run():
-    st.header("🔍 Bank PDF Extractor")
-
-    uploaded_files = st.file_uploader("Upload one or more bank PDFs", type=["pdf"], accept_multiple_files=True)
+        st.markdown("""<style>
+        .custom-title {
+        font-size: 18px !important;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        }
+    </style>
+    <div class="custom-title">Bank PDF Processor</div>
+    """,
+    unsafe_allow_html=True
+    )
+    uploaded_files = st.file_uploader("Upload one or more Wio bank PDFs", type=["pdf"], accept_multiple_files=True)
 
     final_df = pd.DataFrame()
 
